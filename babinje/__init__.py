@@ -15,7 +15,7 @@ def create_app():
     api = Api(app)
     db.init_app(app)
 
-    api.add_resource(HelloWorld, "/helloworld")
+    api.add_resource(HelloWorld, "/api/v1/items")
 
     setup_database(app, babinje_config.db_filename)
 

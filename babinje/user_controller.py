@@ -1,11 +1,11 @@
 from urllib.parse import urlparse
-from flask_restful import Resource, reqparse, abort, request
+from flask_restful import Resource, reqparse, abort
 from flask import url_for
-from .babinje_item import babinje_item_marshaller, BabinjeItem, User, db, make_reset_string, make_expiry_date
+from .babinje_item import BabinjeItem, User, db, make_reset_string, make_expiry_date
 from sqlalchemy import select
 
 items_post_args = reqparse.RequestParser()
-items_post_args.add_argument("email", type=str, help="Ime artikla za babinje", required=True)
+items_post_args.add_argument("email", type=str, help="Email za registraciju", required=True)
 
 def upsert_user(email: str):
     query = select(User).where(User.email == email)

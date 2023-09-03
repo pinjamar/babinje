@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_restful import Api
+from flask_cors import CORS
 
 from .items_rest_controller import ItemsController
 from .items_admin import ItemsAdmin
@@ -13,6 +14,7 @@ babinje_config = AppConfig("config.json")
 
 def create_app():
     app = Flask(__name__)
+    cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
     app.config["SECRET_KEY"] = babinje_config.secret_key
     app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{babinje_config.db_filename}"
     

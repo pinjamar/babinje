@@ -36,3 +36,5 @@ class BabinjeItem(db.Model):
     desc = Column(String(10000), nullable=True)    
     user_id = Column(Integer, ForeignKey('user.id'), nullable=True)
     user = db.relationship("User", back_populates="items")
+    img_url = Column(String(255), nullable=True)
+    isBought = Column(Integer, nullable=False, default=0)

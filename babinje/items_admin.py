@@ -2,7 +2,7 @@ from flask_restful import Resource, reqparse, marshal_with
 from .babinje_item import *
 
 items_post_args = reqparse.RequestParser()
-items_post_args.add_argument("name", type=str, help= "Ime artikla za babinje",)
+items_post_args.add_argument("name", type=str, help= "Ime artikla za babinje")
 items_post_args.add_argument("desc", type=str, help= "Opis artikla za babinje")
 
 class ItemsAdmin(Resource):

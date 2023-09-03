@@ -4,6 +4,7 @@ from .babinje_item import *
 items_post_args = reqparse.RequestParser()
 items_post_args.add_argument("name", type=str, help= "Ime artikla za babinje")
 items_post_args.add_argument("desc", type=str, help= "Opis artikla za babinje")
+items_post_args.add_argument("link", type=str, help= "Link na artikl", required=False)
 
 class ItemsAdmin(Resource):
     
@@ -11,7 +12,7 @@ class ItemsAdmin(Resource):
     def post(self):
         args = items_post_args.parse_args()
 
-        new_item = BabinjeItem(name = args["name"], desc=args["desc"])
+        new_item = BabinjeItem(name = args["name"], desc=args["desc"], link=args["link"])
         db.session.add(new_item)
         db.session.commit()
 

@@ -15,7 +15,8 @@ babinje_item_marshaller = {
     "id": fields.Integer,
     "name": fields.String,
     "desc": fields.String,
-    "user": fields.Nested(user_marshaller, allow_null=True)
+    "user": fields.Nested(user_marshaller, allow_null=True),
+    "link": fields.String
 }
 
 def make_reset_string():
@@ -33,7 +34,8 @@ class User(db.Model):
 class BabinjeItem(db.Model):
     id = Column(Integer, primary_key=True)
     name = Column(String(255), nullable=False)
-    desc = Column(String(10000), nullable=True)    
+    desc = Column(String(10000), nullable=True)
+    link = Column(String(255), nullable=True)
     user_id = Column(Integer, ForeignKey('user.id'), nullable=True)
     user = db.relationship("User", back_populates="items")
     img_url = Column(String(255), nullable=True)

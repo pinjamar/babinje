@@ -2,6 +2,7 @@ import { createRoot } from "react-dom/client";
 import React from "react";
 import Error from "./router/Error"
 import ItemList from "./pages/ItemList"
+import Dodavac from "./pages/Dodavac";
 
 import {
     createBrowserRouter,
@@ -18,7 +19,11 @@ const router = createBrowserRouter([
       children: [{
         path: "",
         element: <ItemList />,
-      }],
+      },
+        {
+            path: "95a0bd0ed04ad8e8b93cef059bf99ac0b338b259e6bd084e",
+            element: <Dodavac />
+        }],
     },
   ]);
 

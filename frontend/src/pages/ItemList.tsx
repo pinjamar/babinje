@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 
-import { Container, Header } from "semantic-ui-react";
+import { Card, CardGroup } from "semantic-ui-react";
 import { ApiResponse, BabinjeItem } from "../Models";
+import BabinjeCard from "../items/BabinjeCard";
 
 const ItemsList: React.FC = () => {
     const [ items, setItems ] = useState<Array<BabinjeItem>>([])
@@ -27,9 +28,9 @@ const ItemsList: React.FC = () => {
     }, []);
 
 
-    return (<div>
-            {items.map(it => <div>{it.name}</div>)}
-        </div>
+    return (<CardGroup>
+        {items.map(it => <BabinjeCard data={it} />)}
+    </CardGroup>
     )
 }
 

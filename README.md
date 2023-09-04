@@ -14,7 +14,11 @@ Ako sve bude dobro, upalit će se backend. Ako bude problema, javi na whatsapp.
 
 Bekend radi na `localhost:5000`. Trenutno nema podataka.
 
-Za dodat malo podataka, pokreni nekoliko puta `python test.py` dok radi backend da bi dodao par elemenata
+Prvi put kad pokreneš backend, pokreni jednom `seed-backend.sh`. Ovu skriptu treba svaki put pokretat kad kažem da treba izbrisat bazu.
+
+Baza se briše brisanjem `instance` foldera. Nakon toga pokrenit backend i može se seed opet pokrenit.
+
+seed-backend je potrebno samo jednom pokrenit nakon starta servera sa friškom bazom, inače će postojat duplikati u bazi. I WILL KNOW
 
 Eto!
 

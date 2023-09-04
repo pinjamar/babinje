@@ -19,13 +19,15 @@ babinje_item_marshaller = {
     "link": fields.String
 }
 
-def make_reset_string():
+def make_email_action_string():
     return urandom(24).hex()
+
 def make_expiry_date():
     return datetime.utcnow() + timedelta(minutes=15)
 
 class User(db.Model):
     id = Column(Integer, primary_key=True)
+    name = Column(String(1024), nullable=True)
     email = Column(String(1024), nullable=False, unique=True)
     reset_string = Column(String(48), nullable=True)
     reset_string_expiry = Column(DateTime, nullable=True)

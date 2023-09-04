@@ -2,7 +2,10 @@ from flask_restful import Resource, abort, marshal_with
 from .babinje_item import User, BabinjeItem, db, babinje_item_marshaller
 from sqlalchemy import select
 from datetime import datetime
+from .app_config import MailBuilder
 
+# Ovdje se radi API request sa stranice na webu na koju sleti email
+# /api/v1/confirm/<int:item_id>/<string:key>
 class MailOperationsController(Resource):
 
     @marshal_with(babinje_item_marshaller, envelope="data")

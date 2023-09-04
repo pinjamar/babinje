@@ -9,6 +9,7 @@ from .mail_operations_controller import MailOperationsController
 
 from .app_config import AppConfig
 from .babinje_item import db
+from .email_service import mail
 
 babinje_config = AppConfig("config.json")
 
@@ -17,8 +18,15 @@ def create_app():
     cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
     app.config["SECRET_KEY"] = babinje_config.secret_key
     app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{babinje_config.db_filename}"
+    app.config["MAIL_SERVER"] = babinje_config.mail_server
+    app.config["MAIL_PORT"] = babinje_config.mail_port
+    app.config["MAIL_USERNAME"] = babinje_config.mail_username
+    app.config["MAIL_PASSWORD"] = babinje_config.mail_password
+    app.config["MAIL_USE_TLS"] = babinje_config.mail_use_tls
+    app.config["MAIL_USE_SSL"] = babinje_config.mail_use_ssl
     
     api = Api(app)
+    mail.init_app(app)
     db.init_app(app)
 
     api.add_resource(ItemsController, "/api/v1/items")

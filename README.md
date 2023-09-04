@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Babinje
 
 Bilo bi ljepo da uspije
@@ -22,3 +23,6 @@ Eto!
 
 Treba imat što noviji node.js. U `frontend` folderu se nalazi frontend, pokrenit sa `yarn install` pa `yarn start`
 Frontend radi na `localhost:1234`
+=======
+# babinje
+>>>>>>> 39bbbb7 (Initial commit)

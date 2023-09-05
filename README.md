@@ -14,7 +14,7 @@ Ako sve bude dobro, upalit će se backend. Ako bude problema, javi na whatsapp.
 
 Bekend radi na `localhost:5000`. Trenutno nema podataka.
 
-Prvi put kad pokreneš backend, pokreni jednom `seed-backend.sh`. Ovu skriptu treba svaki put pokretat kad kažem da treba izbrisat bazu.
+Prvi put kad pokreneš backend, pokreni jednom `seed-data.sh`. Ovu skriptu treba svaki put pokretat kad kažem da treba izbrisat bazu.
 
 Baza se briše brisanjem `instance` foldera. Nakon toga pokrenit backend i može se seed opet pokrenit.
 

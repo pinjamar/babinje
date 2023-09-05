@@ -1,7 +1,8 @@
 from urllib.parse import urlparse
 from flask_restful import Resource, reqparse, abort
 from flask import url_for
-from .babinje_item import BabinjeItem, User, db, make_reset_string, make_expiry_date
+from .babinje_item import BabinjeItem, User, db, make_email_action_string, make_expiry_date
+from .email_service import send_email
 from sqlalchemy import select
 
 items_post_args = reqparse.RequestParser()
@@ -24,7 +25,7 @@ def process_user(item: BabinjeItem, email: str):
     
     # upsert a user if not existing
     user = upsert_user(email=email)
-    reset_string = make_reset_string()
+    reset_string = make_email_action_string()
 
     user.reset_string = reset_string
     user.reset_string_expiry = make_expiry_date()
@@ -32,14 +33,17 @@ def process_user(item: BabinjeItem, email: str):
     db.session.commit()
     return f"confirm/{item.id}/{reset_string}"
 
+# Ova operacija šalej email
 class UserController(Resource):
     
     def post(self, item_id):
         args = items_post_args.parse_args()
-        item = BabinjeItem.query.get(item_id)
+        item: BabinjeItem = BabinjeItem.query.get(item_id)
 
         url_result = process_user(item, args["email"])
         # NASTY URL BUILDING SHITE
         url = url_for("static", filename = "", _external=True).replace("/static", "") + url_result
+
+        send_email(item, args["email"], item.user == None, url)
 
         return {"data": {"refresh_link": url}}, 201

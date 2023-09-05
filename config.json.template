@@ -6,5 +6,6 @@
     "MAIL_USERNAME": "f4d75f5abb4909",
     "MAIL_PASSWORD": "9674d021e0aa99",
     "MAIL_USE_TLS": true,
+    "MAIL_TEMPLATE_FILENAME": "email.html",
     "MAIL_USE_SSL": false
 }

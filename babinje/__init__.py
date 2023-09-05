@@ -7,11 +7,12 @@ from .items_admin import ItemsAdmin
 from .user_controller import UserController
 from .mail_operations_controller import MailOperationsController
 
-from .app_config import AppConfig
+from .app_config import AppConfig, MailBuilder
 from .babinje_item import db
 from .email_service import mail
 
 babinje_config = AppConfig("config.json")
+mail_builder = MailBuilder(babinje_config.mail_template_filename)
 
 def create_app():
     app = Flask(__name__)

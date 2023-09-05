@@ -8,6 +8,12 @@ interface BabinjeItem {
   user?: User;
 }
 
+interface MutationOperationResult
+{
+  isRegister: boolean
+  item: BabinjeItem
+}
+
 interface User {
   id: number;
   email: string;
@@ -17,4 +23,4 @@ interface ApiResponse<T> {
   data?: T;
 }
 
-export type { BabinjeItem, ApiResponse, User };
+export type { BabinjeItem, ApiResponse, User, MutationOperationResult };

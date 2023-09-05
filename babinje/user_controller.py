@@ -53,7 +53,7 @@ class UserController(Resource):
         url_result = process_user(item, email, name)
         # NASTY URL BUILDING SHITE
         user = upsert_user(email)
-        url = url_for("static", filename = "", _external=True).replace("/static", "") + url_result
+        url = "http://localhost:1234/" + url_result
 
         send_email(item, extract_name(user=user), email, item.user == None, url)
 

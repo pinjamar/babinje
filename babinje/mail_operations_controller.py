@@ -2,14 +2,25 @@ from flask_restful import Resource, abort, marshal_with
 from .babinje_item import User, BabinjeItem, db, babinje_item_marshaller
 from sqlalchemy import select
 from datetime import datetime
-from .app_config import MailBuilder
+from flask_restful import fields
+
+result_marshaller = {
+    "isRegister": fields.Boolean,
+    "item": fields.Nested(babinje_item_marshaller)
+}
+class RegisterMutationResult:
+    isRegister: bool = False
+    item: BabinjeItem = None
+    def __init__(self, isRegister, item):
+        self.isRegister = isRegister
+        self.item = item
 
 # Ovdje se radi API request sa stranice na webu na koju sleti email
 # /api/v1/confirm/<int:item_id>/<string:key>
 class MailOperationsController(Resource):
 
-    @marshal_with(babinje_item_marshaller, envelope="data")
-    def get(self, item_id: int, key: str):
+    @marshal_with(result_marshaller, envelope="data")
+    def post(self, item_id: int, key: str):
         item = db.session.execute(select(BabinjeItem).where(BabinjeItem.id == item_id)).scalar_one_or_none()
         user = db.session.execute(select(User).where(User.reset_string == key)).scalar_one_or_none()
         now = datetime.utcnow()
@@ -27,9 +38,11 @@ class MailOperationsController(Resource):
         else:
             # removing user from item
             item.user = None
+
+        isRegister = item.user != None
         
         user.reset_string = None
         user.reset_string_expiry = None
         db.session.commit()
 
-        return item, 200
+        return RegisterMutationResult(isRegister, item), 200

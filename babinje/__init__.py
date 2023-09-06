@@ -12,7 +12,7 @@ from .babinje_item import db
 from .email_service import mail
 
 babinje_config = AppConfig("config.json")
-mail_builder = MailBuilder(babinje_config.mail_template_filename)
+mail_builder = MailBuilder(babinje_config.mail_template_filename, babinje_config.mail_accept_template_filename)
 
 
 def api_error(response_code: int, error_code: int, message: str):

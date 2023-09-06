@@ -8,7 +8,7 @@ BASE_HOST = "http://localhost:5000"
 # response = requests.get(BASE_HOST + "/api/v1/items")
 # print(response.json())
 
-response = requests.post(BASE_HOST + "/api/v1/item/1/mutate", json={"email": "brbulic@gmail.com", "name": "Bruvno"})
+response = requests.post(BASE_HOST + "/api/v1/item/3/mutate", json={"email": "brbulic@gmail.com", "name": "Bruvno"})
 print(response.json())
 
 # response = requests.get(BASE_HOST + "/api/v1/confirm/1/aabd352c4e8c7c4d92dd36c069eaf392e1d0513260b5d7f1")

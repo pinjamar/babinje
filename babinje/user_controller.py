@@ -21,11 +21,6 @@ def upsert_user(email: str, name: str = None):
         db.session.commit()
     return existing
 
-def extract_name(user: User):
-    if user.name != None:
-        return user.name
-    return user.email.split("@")[0]
-
 def process_user(item: BabinjeItem, email: str, name: str):
     if item.user != None:
         if item.user.email != email:
@@ -68,6 +63,6 @@ class UserController(Resource):
         user = upsert_user(email)
         url = "http://localhost:1234/" + url_result
 
-        send_email(item, extract_name(user=user), email, item.user == None, url)
+        send_email(item, user, item.user == None, url)
 
         return {"data": {"refresh_link": url}}, 201

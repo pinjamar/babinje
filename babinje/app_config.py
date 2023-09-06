@@ -10,6 +10,7 @@ class AppConfig:
     mail_use_tls: bool = None
     mail_use_ssl: bool = None
     mail_template_filename: str = None
+    mail_accept_template_filename: str = None
     def __init__(self, filename: str):
         with open(filename) as config:
             jConfig = load(config)    
@@ -22,15 +23,25 @@ class AppConfig:
             self.mail_use_tls = jConfig["MAIL_USE_TLS"]
             self.mail_use_ssl = jConfig["MAIL_USE_SSL"]
             self.mail_template_filename = jConfig["MAIL_TEMPLATE_FILENAME"]
+            self.mail_accept_template_filename = jConfig["MAIL_ACCEPT_TEMPLATE_FILENAME"]
 
 # TOKEN 1 - #POZDRAV#
 class MailBuilder:
     template: str = ""
-    def __init__(self, filename: str):
-        with open(filename) as email:
+    accept_template: str = ""
+    def __init__(self, regUnregTemplateFilename: str, acceptTemplateFilename: str):
+        with open(regUnregTemplateFilename) as email:
             self.template = email.read()
+        with open(acceptTemplateFilename) as fn:
+            self.accept_template = fn.read()
             
     def generate_message(self, name: str, isRegister: bool, item_name: str, url: str):
         akcija_tekst = "Hvala što ste se registrirali za poklon: " + item_name if isRegister else "Žao nam je što ste odustali od poklona: " + item_name
         return self.template.replace("#POZDRAV#", f"Pozdrav, {name}!").replace("#AKCIJA#", akcija_tekst).replace("#HREF#", url)
+    
+    def generate_confirm_message(self, name: str, item_name: str, item_url: str | None):
+        artikl_text = item_name
+        if item_url != None:
+            artikl_text = f"<a href=\"{item_url}\" target=\"_blank\">{item_name}</a>"
+        return self.accept_template.replace("#POZDRAV#", f"Pozdrav, {name}!").replace("#ARTIKL#", artikl_text)
         

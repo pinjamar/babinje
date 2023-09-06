@@ -10,7 +10,7 @@ const ConfirmationLander: React.FC = () => {
     const [ result, setResult ] = useState<MutationOperationResult | undefined>();
 
     useEffect(() => {
-        fetch(`http://localhost:5000/api/v1/confirm/${itemId}/${actionString}`, {method: "POST"})
+        fetch(`/api/v1/confirm/${itemId}/${actionString}`, {method: "POST"})
             .then(response => {
                 if (response.ok) {
                     return response.json() as Promise<ApiResponse<MutationOperationResult>>;

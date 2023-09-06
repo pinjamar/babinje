@@ -8,7 +8,7 @@ const ItemsList: React.FC = () => {
     const [ items, setItems ] = useState<Array<BabinjeItem>>([])
 
     useEffect(() => {
-        fetch("http://localhost:5000/api/v1/items")
+        fetch("api/v1/items")
         .then(response => {
             if (response.ok) {
                 let result = response.json() as Promise<ApiResponse<BabinjeItem[]>>

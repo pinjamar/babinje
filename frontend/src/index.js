@@ -24,10 +24,6 @@ const router = createBrowserRouter([
     {
       path: "95a0bd0ed04ad8e8b93cef059bf99ac0b338b259e6bd084e",
       element: <Dodavac />
-    },
-    {
-      path: "confirm/:itemId/:actionString",
-      element: <ConfirmationLander />
     }
   ],
   },

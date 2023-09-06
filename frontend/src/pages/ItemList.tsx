@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import { Card, CardGroup } from "semantic-ui-react";
 import { ApiResponse, BabinjeItem } from "../Models";
-import BabinjeCard from "../items/BabinjeCard";
+import BabinjeCard from "../components/BabinjeCard";
 
 const ItemsList: React.FC = () => {
     const [ items, setItems ] = useState<Array<BabinjeItem>>([])

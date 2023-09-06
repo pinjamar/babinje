@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, jsonify, abort
 from flask_restful import Api
 from flask_cors import CORS
 
@@ -13,6 +13,15 @@ from .email_service import mail
 
 babinje_config = AppConfig("config.json")
 mail_builder = MailBuilder(babinje_config.mail_template_filename)
+
+
+def api_error(response_code: int, error_code: int, message: str):
+    response = jsonify({
+        "code": error_code,
+        "message": message
+    })
+    response.status_code = response_code
+    abort(response)
 
 def create_app():
     app = Flask(__name__)

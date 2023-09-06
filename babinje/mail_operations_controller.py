@@ -21,20 +21,22 @@ class MailOperationsController(Resource):
 
     @marshal_with(result_marshaller, envelope="data")
     def post(self, item_id: int, key: str):
+        from . import api_error
+
         item = db.session.execute(select(BabinjeItem).where(BabinjeItem.id == item_id)).scalar_one_or_none()
         user = db.session.execute(select(User).where(User.reset_string == key)).scalar_one_or_none()
         now = datetime.utcnow()
 
         if item == None or user == None:
-            abort("Item is invalid or reset string is invalid")
+            return api_error(400, -1950, "Item is invalid or reset string is invalid")
         
         if now > user.reset_string_expiry:
-            abort("Link expired")
+            return api_error(400, -1953, "Link expired")
         
         if item.user == None:
             item.user = user
         elif item.user != user:
-            abort("Cannot mutate another user on an element")
+            return api_error(400, -1991, "Cannot mutate to another user on an item")
         else:
             # removing user from item
             item.user = None

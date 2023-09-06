@@ -1,4 +1,4 @@
-from urllib.parse import urlparse
+from datetime import datetime
 from flask_restful import Resource, reqparse, abort
 from flask import url_for
 from .babinje_item import BabinjeItem, User, db, make_email_action_string, make_expiry_date
@@ -36,7 +36,7 @@ def process_user(item: BabinjeItem, email: str, name: str):
     reset_string = make_email_action_string()
 
     user.reset_string = reset_string
-    user.reset_string_expiry = make_expiry_date()
+    user.reset_string_expiry = make_expiry_date(15)
     
     db.session.commit()
     return f"confirm/{item.id}/{reset_string}"
@@ -45,10 +45,23 @@ def process_user(item: BabinjeItem, email: str, name: str):
 class UserController(Resource):
     
     def post(self, item_id):
+        from . import api_error
+
         args = items_post_args.parse_args()
         item: BabinjeItem = BabinjeItem.query.get(item_id)
         email = args["email"]
         name = args["name"]
+
+        now = datetime.utcnow()
+
+        if (item.reservation_timeout == None):
+            item.reservation_timeout = make_expiry_date(5)
+            db.session.commit()
+        elif now < item.reservation_timeout:
+            return api_error(400, -1911, "Artikl je u procesu rezervacije kod drugog korisnika, pričekajte!")
+        else:
+            item.reservation_timeout = make_expiry_date(5)
+            db.session.commit()
 
         url_result = process_user(item, email, name)
         # NASTY URL BUILDING SHITE

@@ -22,8 +22,8 @@ babinje_item_marshaller = {
 def make_email_action_string():
     return urandom(24).hex()
 
-def make_expiry_date():
-    return datetime.utcnow() + timedelta(minutes=15)
+def make_expiry_date(minutes: int):
+    return datetime.utcnow() + timedelta(minutes=minutes)
 
 class User(db.Model):
     id = Column(Integer, primary_key=True)
@@ -41,4 +41,5 @@ class BabinjeItem(db.Model):
     user_id = Column(Integer, ForeignKey('user.id'), nullable=True)
     user = db.relationship("User", back_populates="items")
     img_url = Column(String(255), nullable=True)
+    reservation_timeout = Column(DateTime, nullable=True)
     isBought = Column(Integer, nullable=False, default=0)

@@ -19,11 +19,35 @@ babinje_item_marshaller = {
     "link": fields.String
 }
 
+initial_data = [
+    {
+        "name": "Baby Sjedalica Joie", 
+        "desc": "Sjedalica za auto", 
+        "link": "https://www.magicbaby.hr/joie-autosjedalica-i-spin-360-grupa-0-1-0-18-kg-konfigurabilni.html"
+    },
+    {
+        "name": "Hranilica za bebi", 
+        "desc": "Ovo se koristi kad baby malo naraste pa da je stavimo na povišeno da može jest s nami", 
+        "link": "https://www.magicbaby.hr/kinderkraft-hranilica-sienna-konfigurabilni.html"
+    },
+    {
+        "name": "Mobilni sklopivi baby krevet", 
+        "desc": "Za na put", 
+        "link": "https://www.babycenter.hr/freeon-prijenosni-krevetic-safari-safari-dvostruko-dno-953856.html"
+    }
+]
+
 def make_email_action_string():
     return urandom(24).hex()
 
 def make_expiry_date(minutes: int):
     return datetime.utcnow() + timedelta(minutes=minutes)
+
+def create_initial_data(db: SQLAlchemy):
+    for args in initial_data:
+        new_item = BabinjeItem(name = args["name"], desc=args["desc"], link=args["link"])
+        db.session.add(new_item)
+    db.session.commit()
 
 class User(db.Model):
     id = Column(Integer, primary_key=True)

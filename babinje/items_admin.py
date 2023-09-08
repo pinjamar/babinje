@@ -18,3 +18,4 @@ class ItemsAdmin(Resource):
         db.session.commit()
 
         return new_item, 201
+

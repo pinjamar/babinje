@@ -11,6 +11,7 @@ interface BabinjeItemProvider
 {
     getAll(): Promise<Array<BabinjeItem>>
     create(item: BabinjeItem): Promise<BabinjeItem>
+    delete(itemId: number): Promise<any>
 }
 
 class _BabinjeItem implements BabinjeItemProvider
@@ -45,6 +46,19 @@ class _BabinjeItem implements BabinjeItemProvider
         if (!jsonResult.data) { throw response }
 
         return jsonResult.data
+    }
+
+    async delete(itemId: number): Promise<boolean> {
+        const response = await fetch(`/api/v1/bde372d8c36a146728d84419179a703f0d1bb63f530e384e/${itemId}`, {
+            method: "DELETE",
+            headers: {
+                'Accept': 'application/json'
+              },
+        })
+
+        const jsonResult = await response.json() as ApiResponse<boolean>
+
+        return jsonResult.data ?? false
     }
     
 }

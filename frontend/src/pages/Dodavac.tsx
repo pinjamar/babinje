@@ -22,6 +22,17 @@ const Dodavac: React.FC = () => {
       .finally(() => setTimeout(() => setIsLoading(false), 1000) );
     }
 
+    const deleteItem = async (id) => {
+      setIsLoading(true)
+      try {
+        var result = await babinjeProvider.delete(id)
+        fetchData()
+      } catch (error) {
+        alert(error)
+        setIsLoading(false)
+      }
+    }
+
     const processAddItem = async (e) => {
       babinjeProvider.create(e).then(it => {
         fetchData()
@@ -50,7 +61,7 @@ const Dodavac: React.FC = () => {
             <Divider horizontal></Divider>
             <Container>
             <Item.Group divided>
-                {items.map(it => <BabinjeListItem item={it} />)}            
+                {items.map(it => <BabinjeListItem item={it} onDelete={() => deleteItem(it.id)} />)}            
             </Item.Group>
             </Container>
             <AddNewItemModal isOpen={isAddOpen} onClose={() => setIsAddOpen(false)} onSubmit={(a) => {

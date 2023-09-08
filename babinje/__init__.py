@@ -2,6 +2,8 @@ from flask import Flask, jsonify, abort
 from flask_restful import Api
 from flask_cors import CORS
 
+from babinje.items_deleter import ItemsDeleter
+
 from .items_rest_controller import ItemsController
 from .items_admin import ItemsAdmin
 from .user_controller import UserController
@@ -13,7 +15,6 @@ from .email_service import mail
 
 babinje_config = AppConfig("config.json")
 mail_builder = MailBuilder(babinje_config.mail_template_filename, babinje_config.mail_accept_template_filename)
-
 
 def api_error(response_code: int, error_code: int, message: str):
     response = jsonify({
@@ -43,6 +44,7 @@ def create_app(isDebug: bool):
     api.add_resource(UserController, "/api/v1/item/<int:item_id>/mutate")
     api.add_resource(ItemsAdmin, "/api/v1/44ba0bb01331a2c0c9d6a835d0091c2c9033721afd612c30")
     api.add_resource(MailOperationsController, "/api/v1/confirm/<int:item_id>/<string:key>")
+    api.add_resource(ItemsDeleter, "/api/v1/bde372d8c36a146728d84419179a703f0d1bb63f530e384e/<int:item_id>")
 
     setup_database(app, babinje_config.db_filename, isDebug)
 

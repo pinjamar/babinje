@@ -3,10 +3,13 @@ import React from 'react';
 import Error from './router/Error';
 import ItemList from './pages/ItemList';
 import Dodavac from './pages/Dodavac';
-import ResetString from './pages/ResetString';
 import ConfirmationLander from './pages/ConfirmationLander';
 
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import {
+  createBrowserRouter,
+  RouterProvider,
+  useParams,
+} from 'react-router-dom';
 
 import App from './App';
 
@@ -25,12 +28,8 @@ const router = createBrowserRouter([
         element: <Dodavac />,
       },
       {
-        path: 'itemId',
-        element: <ItemList />,
-      },
-      {
-        path: 'reset',
-        element: <ResetString />,
+        path: 'confirm/:itemId/:resetString',
+        element: <ConfirmationLander />,
       },
     ],
   },

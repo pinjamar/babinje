@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Routes, Route, useParams } from 'react-router-dom';
-import { Card, CardGroup } from 'semantic-ui-react';
+import { Card  } from 'semantic-ui-react';
 import { ApiResponse, BabinjeItem } from '../Models';
 import BabinjeCard from '../components/BabinjeCard';
 
@@ -26,11 +25,11 @@ const ItemsList: React.FC = () => {
   }, []);
 
   return (
-    <CardGroup>
+    <Card.Group centered>
       {items.map((it) => (
         <BabinjeCard data={it} />
       ))}
-    </CardGroup>
+    </Card.Group>
   );
 };
 

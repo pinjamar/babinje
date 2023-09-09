@@ -10,6 +10,8 @@ import {
   Form,
 } from 'semantic-ui-react';
 
+const logo = new URL('../images/baby-logo.jpg', import.meta.url);
+
 interface Props {
   data: BabinjeItem;
 }
@@ -39,7 +41,7 @@ const BabinjeCard: React.FC<Props> = (props) => {
         <Image
           floated="right"
           size="mini"
-          src="/images/avatar/large/molly.png"
+          src={logo}
         />
         <Card.Header>{item.name}</Card.Header>
         <Card.Meta>{item.isBought ? 'Kupljeno' : 'Slobodno'}</Card.Meta>

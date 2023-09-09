@@ -10,7 +10,7 @@ interface BabinjeItemCreate
 interface BabinjeItemProvider
 {
     getAll(): Promise<Array<BabinjeItem>>
-    create(item: BabinjeItem): Promise<BabinjeItem>
+    create(item: BabinjeItemCreate): Promise<BabinjeItem>
     delete(itemId: number): Promise<any>
 }
 
@@ -32,7 +32,7 @@ class _BabinjeItem implements BabinjeItemProvider
     }
     
     
-    async create(itemDto: BabinjeItem): Promise<BabinjeItem> {
+    async create(itemDto: BabinjeItemCreate): Promise<BabinjeItem> {
         const response = await fetch("/api/v1/44ba0bb01331a2c0c9d6a835d0091c2c9033721afd612c30", { 
             method: "POST", 
             headers: {

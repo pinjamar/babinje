@@ -7,8 +7,7 @@ import ConfirmationLander from './pages/ConfirmationLander';
 
 import {
   createBrowserRouter,
-  RouterProvider,
-  useParams,
+  RouterProvider
 } from 'react-router-dom';
 
 import App from './App';

@@ -39,7 +39,7 @@ class MailBuilder:
         akcija_tekst = "Hvala što ste se registrirali za poklon: " + item_name if isRegister else "Žao nam je što ste odustali od poklona: " + item_name
         return self.template.replace("#POZDRAV#", f"Pozdrav, {name}!").replace("#AKCIJA#", akcija_tekst).replace("#HREF#", url)
     
-    def generate_confirm_message(self, name: str, item_name: str, item_url: str | None):
+    def generate_confirm_message(self, name: str, item_name: str, item_url: str):
         artikl_text = item_name
         if item_url != None:
             artikl_text = f"<a href=\"{item_url}\" target=\"_blank\">{item_name}</a>"

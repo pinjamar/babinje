@@ -18,20 +18,7 @@ const BabinjeCard: React.FC<Props> = (props) => {
   const item = props.data;
 
   const [open, setOpen] = useState(false);
-
-  const FormExampleForm = () => (
-    <Form>
-      <Form.Field>
-        <label>First Name</label>
-        <input placeholder="First Name" />
-      </Form.Field>
-      <Form.Field>
-        <label>Last Name</label>
-        <input placeholder="Last Name" />
-      </Form.Field>
-      <Button type="submit">Submit</Button>
-    </Form>
-  );
+  const [release, setRelease] = useState(false);
 
   return (
     <Card>
@@ -67,16 +54,17 @@ const BabinjeCard: React.FC<Props> = (props) => {
           >
             <Modal.Header>Želite li rezervirati ovaj proizvod?</Modal.Header>
             <Modal.Content image>
-              {/* <Image
-            size="medium"
-            src="https://react.semantic-ui.com/images/avatar/large/rachel.png"
-            wrapped
-          /> */}
-              <p>Ovde ide link proizvoda iz baze</p>
-              <Modal.Description>
-                <Header>Ovde ide name proizvoda iz baze</Header>
-                <p>Ovde ide desc proizvoda iz baze</p>
-              </Modal.Description>
+              <Form id="form" onSubmit={alert()}>
+                <Form.Field>
+                  <label>Name</label>
+                  <input placeholder="First Name" />
+                </Form.Field>
+                <Form.Field>
+                  <label>Email</label>
+                  <input placeholder="Last Name" />
+                </Form.Field>
+                {/* <Button type="submit">Submit</Button> */}
+              </Form>
             </Modal.Content>
             <Modal.Actions>
               <Button color="black" onClick={() => setOpen(false)}>
@@ -93,24 +81,24 @@ const BabinjeCard: React.FC<Props> = (props) => {
           </Modal>
           <Modal
             closeIcon
-            open={open}
+            open={release}
             trigger={
               <Button basic color="red">
                 Otpusti
               </Button>
             }
-            onClose={() => setOpen(false)}
-            onOpen={() => setOpen(true)}
+            onClose={() => setRelease(false)}
+            onOpen={() => setRelease(true)}
           >
             <Header icon="archive" content="Archive Old Messages" />
             <Modal.Content>
               <p>Ne razumin točno šta ovaj botun triba radit?</p>
             </Modal.Content>
             <Modal.Actions>
-              <Button color="red" onClick={() => setOpen(false)}>
+              <Button color="red" onClick={() => setRelease(false)}>
                 <Icon name="remove" /> No
               </Button>
-              <Button color="green" onClick={() => setOpen(false)}>
+              <Button color="green" onClick={() => setRelease(false)}>
                 <Icon name="checkmark" /> Yes
               </Button>
             </Modal.Actions>

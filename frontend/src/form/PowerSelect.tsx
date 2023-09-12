@@ -65,8 +65,7 @@ const PowerSelect: React.FC<InputProps> = (props) => {
                         }
                     />
                 )
-            }}
-        ></Controller>
+            }}></Controller>
     )
 }
 

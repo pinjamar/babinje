@@ -1,22 +1,22 @@
-import React from 'react';
-import { Outlet } from 'react-router-dom';
+import React from 'react'
+import { Outlet } from 'react-router-dom'
 
-import { Container, Menu, Segment } from 'semantic-ui-react';
+import { Container, Menu } from 'semantic-ui-react'
 
 const App: React.FC = () => {
-  return (
-    <div>
-      <Menu inverted>
-        <Container>
-          <Menu.Item as="div">Babinje</Menu.Item>
-        </Container>
-      </Menu>
+    return (
+        <div>
+            <Menu inverted>
+                <Container>
+                    <Menu.Item as='div'>Babinje</Menu.Item>
+                </Container>
+            </Menu>
 
-      <Container text>
-        <Outlet />
-      </Container>
-    </div>
-  );
-};
+            <Container text>
+                <Outlet />
+            </Container>
+        </div>
+    )
+}
 
-export default App;
+export default App

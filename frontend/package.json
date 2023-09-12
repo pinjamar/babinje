@@ -1,19 +1,25 @@
 {
-  "dependencies": {
-    "http-proxy-middleware": "^2.0.6",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-router-dom": "^6.15.0",
-    "semantic-ui-react": "^3.0.0-beta.0"
-  },
-  "devDependencies": {
-    "@types/react": "^18.2.20",
-    "@types/react-dom": "^18.2.7",
-    "parcel": "^2.9.3",
-    "process": "^0.11.10"
-  },
-  "scripts": {
-    "start": "parcel src/index.html",
-    "build": "parcel build src/index.html"
-  }
+    "dependencies": {
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "react-router-dom": "^6.15.0",
+        "semantic-ui-react": "^3.0.0-beta.0"
+    },
+    "devDependencies": {
+        "@types/react": "^18.2.20",
+        "@types/react-dom": "^18.2.7",
+        "@typescript-eslint/eslint-plugin": "^6.7.0",
+        "@typescript-eslint/parser": "^6.7.0",
+        "eslint": "^8.49.0",
+        "eslint-plugin-react": "^7.33.2",
+        "parcel": "^2.9.3",
+        "prettier": "^3.0.3",
+        "process": "^0.11.10",
+        "typescript": "^5.2.2"
+    },
+    "scripts": {
+        "start": "parcel src/index.html",
+        "build": "parcel build src/index.html",
+        "clean": "rm -rvf .parcel-cache"
+    }
 }

@@ -49,7 +49,7 @@ const TextInputForm: React.FC<InputProps> = (props) => {
         validate = undefined,
 
         register,
-        errors = {}
+        errors = {},
     } = props
 
     const labelPosition = rightLabel ? 'right' : undefined
@@ -115,8 +115,7 @@ const TextInputForm: React.FC<InputProps> = (props) => {
                 valueAsNumber={valueAsNumber}
                 minLength={minLength}
                 maxLength={maxLength}
-                value={value}                
-            >
+                value={value}>
                 <input
                     {...register(name, {
                         required,

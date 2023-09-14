@@ -3,6 +3,7 @@ from flask_restful import Api
 from flask_cors import CORS
 
 from babinje.items_deleter import ItemsDeleter
+from babinje.link_previewer import LinkPreviewer
 
 from .items_rest_controller import ItemsController
 from .items_admin import ItemsAdmin
@@ -45,6 +46,7 @@ def create_app(isDebug: bool):
     api.add_resource(ItemsAdmin, "/api/v1/44ba0bb01331a2c0c9d6a835d0091c2c9033721afd612c30")
     api.add_resource(MailOperationsController, "/api/v1/confirm/<int:item_id>/<string:key>")
     api.add_resource(ItemsDeleter, "/api/v1/bde372d8c36a146728d84419179a703f0d1bb63f530e384e/<int:item_id>")
+    api.add_resource(LinkPreviewer, "/api/v1/parseUrl")
 
     setup_database(app, babinje_config.db_filename, isDebug)
 

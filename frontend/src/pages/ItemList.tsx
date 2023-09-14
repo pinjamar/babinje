@@ -6,6 +6,11 @@ import BabinjeCard from '../components/BabinjeCard'
 const ItemsList: React.FC = () => {
     const [items, setItems] = useState<Array<BabinjeItem>>([])
 
+    const callback = (values) => {
+        alert(JSON.stringify(values))
+        // napravit api poziv za rezervaciju
+    }
+
     useEffect(() => {
         fetch('api/v1/items')
             .then((response) => {
@@ -29,7 +34,12 @@ const ItemsList: React.FC = () => {
     return (
         <Card.Group centered>
             {items.map((it, idx) => (
-                <BabinjeCard key={idx + '_card_main'} data={it} />
+                <BabinjeCard
+                    key={idx + '_card_main'}
+                    data={it}
+                    onReserve={callback}
+                    onRelease={() => {}}
+                />
             ))}
         </Card.Group>
     )

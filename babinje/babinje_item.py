@@ -65,5 +65,6 @@ class BabinjeItem(db.Model):
     user_id = Column(Integer, ForeignKey('user.id'), nullable=True)
     user = db.relationship("User", back_populates="items")
     img_url = Column(String(255), nullable=True)
+    is_fungible = Column(Integer, nullable=False, default=0)
     reservation_timeout = Column(DateTime, nullable=True)
     isBought = Column(Integer, nullable=False, default=0)

@@ -8,23 +8,15 @@ import {
     Header,
     Icon,
     Form,
-    FormProps,
     Input,
 } from 'semantic-ui-react'
 
 const logo = new URL('../images/baby-logo.jpg', import.meta.url)
 
-interface result {
-    name: string
-    desc: string
-    link: string
-}
-
 interface Props {
     data: BabinjeItem
-    isOpen: boolean
-    onClose(): void
-    onSubmit?(n: result): void
+    onReserve(obj): void
+    onRelease(n): void
 }
 
 const BabinjeCard: React.FC<Props> = (props) => {
@@ -33,20 +25,14 @@ const BabinjeCard: React.FC<Props> = (props) => {
     const [open, setOpen] = useState(false)
     const [release, setRelease] = useState(false)
 
-    const onCreate = (e: any, data: FormProps) => {
+    const onReserveFormSubmitted = (e) => {
         e.preventDefault()
 
         const form = e.target
         const formData = new FormData(form)
 
-        props.onSubmit?.(
-            Object.fromEntries(formData.entries()) as any as result,
-        )
-    }
-
-    const error = {
-        content: 'Unesite vrijednost',
-        pointing: 'below',
+        const obj = Object.fromEntries(formData.entries())
+        props.onReserve(obj)
     }
 
     return (
@@ -80,15 +66,15 @@ const BabinjeCard: React.FC<Props> = (props) => {
                             Želite li rezervirati ovaj proizvod?
                         </Modal.Header>
                         <Modal.Content image>
-                            <Form id='form' onSubmit={onCreate}>
+                            <Form id='form' onSubmit={onReserveFormSubmitted}>
                                 <Form.Field
-                                    name='name'
+                                    name='pala'
                                     control={Input}
                                     label='Ime'
                                     required
                                 />
                                 <Form.Field
-                                    name='email'
+                                    name='cinka'
                                     control={Input}
                                     label='Email'
                                     required
@@ -99,7 +85,6 @@ const BabinjeCard: React.FC<Props> = (props) => {
                             <Button
                                 color='black'
                                 onClick={() => setOpen(false)}
-                                type='submit'
                                 negative>
                                 Neeću, falija san
                             </Button>
@@ -107,7 +92,7 @@ const BabinjeCard: React.FC<Props> = (props) => {
                                 content='Da, potvrdi!'
                                 labelPosition='right'
                                 icon='checkmark'
-                                onClick={() => setOpen(false)}
+                                form='form'
                                 type='submit'
                                 positive
                             />
@@ -125,7 +110,9 @@ const BabinjeCard: React.FC<Props> = (props) => {
                         onOpen={() => setRelease(true)}>
                         <Header icon='archive' content='Archive Old Messages' />
                         <Modal.Content>
-                            <p>Želite li otkazati nabavu ovog proizvoda?</p>
+                            <p>Ovaj prozivod je registriran na b***c@g**.*m</p>
+                            <p>Potvride mail da bi odregsitrirali prozizvod</p>
+                            <input name='email' />
                         </Modal.Content>
                         <Modal.Actions>
                             <Button

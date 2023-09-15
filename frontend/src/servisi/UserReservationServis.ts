@@ -13,6 +13,15 @@ interface UserReservationServis {
     // unregister(itemId: string, email: string): Promise<boolean>
 }
 
+async function parseError(e: Response): Promise<string> {
+    try {
+        const json = await e.json()
+        return `Greška: ${json.message}, kod ${json.code}`
+    } catch {
+        return 'Nepoznata greška - ' + e.status
+    }
+}
+
 class _Servis implements UserReservationServis {
     async register(
         itemId: number,
@@ -24,7 +33,7 @@ class _Servis implements UserReservationServis {
             email: email,
         }
 
-        return fetch(`/api/v1/item/${itemId}/mutate`, {
+        const response = await fetch(`/api/v1/item/${itemId}/mutate`, {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -32,19 +41,14 @@ class _Servis implements UserReservationServis {
             },
             body: JSON.stringify(dto),
         })
-            .then((response) => {
-                if (response.ok) {
-                    const result = response.json() as Promise<
-                        ApiResponse<ReservationResult>
-                    >
-                    return result
-                } else {
-                    throw response
-                }
-            })
-            .then((json) => {
-                return json.data || { refresh_link: '' }
-            })
+
+        if (response.ok) {
+            const result =
+                (await response.json()) as ApiResponse<ReservationResult>
+            return result.data || { refresh_link: '' }
+        }
+
+        throw new Error(await parseError(response))
     }
 }
 

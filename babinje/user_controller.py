@@ -22,9 +22,11 @@ def upsert_user(email: str, name: str = None):
     return existing
 
 def process_user(item: BabinjeItem, email: str, name: str):
+    from . import api_error
+
     if item.user != None:
         if item.user.email != email:
-            abort("This Item is already registered, but not with this user")        
+            api_error(400, -1945, "Drugi korisnik posjeduje ovaj artikl, nemoguće je koristiti s ovim mailom")     
     
     # upsert a user if not existing
     user = upsert_user(email=email, name=name)
@@ -36,6 +38,17 @@ def process_user(item: BabinjeItem, email: str, name: str):
     db.session.commit()
     return f"confirm/{item.id}/{reset_string}"
 
+from email_validator import validate_email, EmailNotValidError
+
+def check_email(email: str):
+    from . import api_error
+
+    try:
+        emailinfo = validate_email(email, check_deliverability=False)
+        return emailinfo.normalized
+    except EmailNotValidError as e:
+        api_error(400, -1941, "Email nije valjani email greška 10/4 ")
+
 # Ova operacija šalej email
 class UserController(Resource):
     
@@ -45,8 +58,10 @@ class UserController(Resource):
 
         args = items_post_args.parse_args()
         item: BabinjeItem = BabinjeItem.query.get(item_id)
-        email = args["email"]
+        mail_candidate = args["email"]
         name = args["name"]
+        
+        email = check_email(mail_candidate)
 
         now = datetime.utcnow()
         timeout = make_expiry_date(1)
@@ -66,8 +81,10 @@ class UserController(Resource):
         url = babinje_config.my_hostname + "/" + url_result
 
         if not send_email(item, user, item.user == None, url):
-            api_error(400, -1921, "Greška u slanju emaila. Potvrdite email prije ponovnog pokušaja")
             item.reservation_timeout = None
             item.user = None
+            db.session.delete(user)
+            db.session.commit()
+            api_error(400, -1921, "Greška u slanju emaila. Potvrdite email prije ponovnog pokušaja")
 
         return {"data": {"refresh_link": url}}, 201

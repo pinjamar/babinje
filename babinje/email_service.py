@@ -17,7 +17,8 @@ def send_email(item: BabinjeItem, user: User, isRegister: bool, action_url: str)
     try:
         mail.send(msg)
         return True
-    except:
+    except Exception as e:
+        print(str(e))
         return False
 def send_reservation_confirmed(item: BabinjeItem, user: User):
     from . import mail_builder

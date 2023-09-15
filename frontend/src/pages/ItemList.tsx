@@ -1,17 +1,37 @@
 import React, { useEffect, useState } from 'react'
-import { Card } from 'semantic-ui-react'
+import { Card, Dimmer, Loader, Segment } from 'semantic-ui-react'
 import { ApiResponse, BabinjeItem } from '../Models'
-import BabinjeCard from '../components/BabinjeCard'
+import BabinjeCard, { RegisterFormValues } from '../components/BabinjeCard'
+
+import servis from '../servisi/UserReservationServis'
+import { useToast } from '../toast/ToastProvider'
+import { ToastType } from '../toast/ToastItem'
 
 const ItemsList: React.FC = () => {
     const [items, setItems] = useState<Array<BabinjeItem>>([])
+    const [isLoading, setLoading] = useState(false)
+    const toast = useToast()
 
-    const callback = (values) => {
-        alert(JSON.stringify(values))
-        // napravit api poziv za rezervaciju
+    const callback = (values: RegisterFormValues) => {
+        setLoading(true)
+        servis
+            .register(values.itemId, values.email, values.nameSurname)
+            .then(() => {
+                toast.showMessage({
+                    title: 'Babinje Win',
+                    description:
+                        'Zahtjev uspješan. Pogledajte mail za koji trenutak!',
+                    type: ToastType.SUCCESS,
+                })
+            })
+            .catch((error) => {
+                toast.showError(error.message)
+            })
+            .finally(() => setLoading(false))
     }
 
     useEffect(() => {
+        setLoading(true)
         fetch('api/v1/items')
             .then((response) => {
                 if (response.ok) {
@@ -29,19 +49,25 @@ const ItemsList: React.FC = () => {
             .catch((error) => {
                 console.error(error)
             })
+            .finally(() => setLoading(false))
     }, [])
 
     return (
-        <Card.Group centered>
-            {items.map((it, idx) => (
-                <BabinjeCard
-                    key={idx + '_card_main'}
-                    data={it}
-                    onReserve={callback}
-                    onRelease={() => {}}
-                />
-            ))}
-        </Card.Group>
+        <Segment basic>
+            <Card.Group centered>
+                <Dimmer active={isLoading} inverted>
+                    <Loader inverted>Loading</Loader>
+                </Dimmer>
+                {items.map((it, idx) => (
+                    <BabinjeCard
+                        key={idx + '_card_main'}
+                        data={it}
+                        onReserve={callback}
+                        onRelease={callback}
+                    />
+                ))}
+            </Card.Group>
+        </Segment>
     )
 }
 

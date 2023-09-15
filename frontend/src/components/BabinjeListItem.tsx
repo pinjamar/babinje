@@ -28,7 +28,7 @@ const BabinjeListItem: React.FC<Props> = (props) => {
             <Item.Content>
                 <Item.Header>{name}</Item.Header>
                 <Item.Meta>
-                    <a href={link ?? '#'} target='_blank'>
+                    <a href={link ?? '#'} target='_blank' rel='noreferrer'>
                         Link
                     </a>
                 </Item.Meta>

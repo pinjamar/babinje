@@ -41,6 +41,7 @@ class UserController(Resource):
     
     def post(self, item_id):
         from . import api_error
+        from . import babinje_config
 
         args = items_post_args.parse_args()
         item: BabinjeItem = BabinjeItem.query.get(item_id)
@@ -48,21 +49,25 @@ class UserController(Resource):
         name = args["name"]
 
         now = datetime.utcnow()
+        timeout = make_expiry_date(1)
 
         if (item.reservation_timeout == None):
-            item.reservation_timeout = make_expiry_date(5)
+            item.reservation_timeout = timeout
             db.session.commit()
         elif now < item.reservation_timeout:
             return api_error(400, -1911, "Artikl je u procesu rezervacije kod drugog korisnika, pričekajte!")
         else:
-            item.reservation_timeout = make_expiry_date(5)
+            item.reservation_timeout = timeout
             db.session.commit()
 
         url_result = process_user(item, email, name)
         # NASTY URL BUILDING SHITE
         user = upsert_user(email)
-        url = "http://localhost:1234/" + url_result
+        url = babinje_config.my_hostname + "/" + url_result
 
-        send_email(item, user, item.user == None, url)
+        if not send_email(item, user, item.user == None, url):
+            api_error(400, -1921, "Greška u slanju emaila. Potvrdite email prije ponovnog pokušaja")
+            item.reservation_timeout = None
+            item.user = None
 
         return {"data": {"refresh_link": url}}, 201

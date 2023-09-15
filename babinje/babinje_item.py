@@ -6,19 +6,6 @@ from datetime import *
 
 db = SQLAlchemy()
 
-user_marshaller = {
-    "id": fields.Integer,
-    "email": fields.String,
-}
-
-babinje_item_marshaller = {
-    "id": fields.Integer,
-    "name": fields.String,
-    "desc": fields.String,
-    "user": fields.Nested(user_marshaller, allow_null=True),
-    "link": fields.String
-}
-
 initial_data = [
     {
         "name": "Baby Sjedalica Joie", 
@@ -36,6 +23,30 @@ initial_data = [
         "link": "https://www.babycenter.hr/freeon-prijenosni-krevetic-safari-safari-dvostruko-dno-953856.html"
     }
 ]
+
+class EmailMarshaller(fields.Raw):
+    def format(self, mail: str):
+        [pr1, pr2] = mail.split('@')
+        pr1 = pr1[0] + '***' + pr1[-1] + '@'
+        pr2 = pr2[0] + '**.*' + pr2[-1]
+
+        return pr1 + pr2
+
+user_marshaller = {
+    "id": fields.Integer,
+    "email": EmailMarshaller(attribute="email"),
+}
+
+babinje_item_marshaller = {
+    "id": fields.Integer,
+    "name": fields.String,
+    "desc": fields.String,
+    "user": fields.Nested(user_marshaller, allow_null=True),
+    "imgUrl": fields.String,
+    "isFungible": fields.Boolean,
+    "isBought": fields.Boolean,
+    "link": fields.String
+}
 
 def make_email_action_string():
     return urandom(24).hex()
@@ -67,4 +78,4 @@ class BabinjeItem(db.Model):
     img_url = Column(String(255), nullable=True)
     is_fungible = Column(Integer, nullable=False, default=0)
     reservation_timeout = Column(DateTime, nullable=True)
-    isBought = Column(Integer, nullable=False, default=0)
+    is_bought = Column(Integer, nullable=False, default=0)

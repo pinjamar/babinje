@@ -2,20 +2,21 @@ import React from 'react'
 import { Outlet } from 'react-router-dom'
 
 import { Container, Menu } from 'semantic-ui-react'
+import ToastProvider from './toast/ToastProvider'
 
 const App: React.FC = () => {
     return (
-        <div>
+        <ToastProvider>
             <Menu inverted>
                 <Container>
                     <Menu.Item as='div'>Babinje</Menu.Item>
                 </Container>
             </Menu>
 
-            <Container text>
+            <Container>
                 <Outlet />
             </Container>
-        </div>
+        </ToastProvider>
     )
 }
 

@@ -14,12 +14,19 @@ def send_email(item: BabinjeItem, user: User, isRegister: bool, action_url: str)
     email_contents = mail_builder.generate_message(extract_name(user=user), isRegister, item.name, action_url)
     msg = Message("Hvala Vam na odabiru! Potvrdite registraciju" if isRegister else "Žao nam je što odlazite. Potvrdite nam da budemo sigurni", sender="noreply@codebase.hr", recipients=[user.email])
     msg.html = email_contents
-    mail.send(msg)
-    return True
+    try:
+        mail.send(msg)
+        return True
+    except:
+        return False
 def send_reservation_confirmed(item: BabinjeItem, user: User):
     from . import mail_builder
     contents = mail_builder.generate_confirm_message(extract_name(user=user), item.name, item.link)
     msg = Message("Hvala Vam na potvrdi artikla!", recipients=[user.email], sender="noreply@codebase.hr")
     msg.html = contents
-    mail.send(msg)
-    return True
+    try:
+        mail.send(msg)
+        return True
+    except:
+        return False
+    

@@ -1,13 +1,23 @@
 import React, { useState } from 'react'
 import { BabinjeItem } from '../Models'
-import { Button, Confirm, Item } from 'semantic-ui-react'
+import { Button, Confirm, Dropdown, Item } from 'semantic-ui-react'
+import RazredLabela from './RazredLabela'
 
 const logo = new URL('../images/baby-logo.jpg', import.meta.url)
 
 interface Props {
     item: BabinjeItem
     onDelete()
+    onRazredUpdate(id, razred: string)
 }
+
+const options = [
+    { key: 1, value: 'A', text: 'A' },
+    { key: 2, value: 'B', text: 'B' },
+    { key: 3, value: 'C', text: 'C' },
+    { key: 4, value: 'D', text: 'D' },
+    { key: 5, value: 'F', text: 'F' },
+]
 
 const BabinjeAdminListItem: React.FC<Props> = (props) => {
     const { name, link, desc, user, imgUrl } = props.item
@@ -19,6 +29,10 @@ const BabinjeAdminListItem: React.FC<Props> = (props) => {
     const onDelete = async () => {
         await props.onDelete()
         onClose()
+    }
+
+    const onChange = (id, value) => {
+        props.onRazredUpdate(id, value)
     }
 
     return (
@@ -39,6 +53,14 @@ const BabinjeAdminListItem: React.FC<Props> = (props) => {
                     <Button size='mini' onClick={() => setConfirmOpen(true)}>
                         Izbriši
                     </Button>
+                    <RazredLabela grade={props.item.priceGrade} />
+                    <Dropdown
+                        options={options}
+                        clearable
+                        placeholder='Razred cijene'
+                        value={props.item.priceGrade}
+                        onChange={(d, v) => onChange(props.item.id, v.value)}
+                    />
                     <Confirm
                         open={isConfirmOpen}
                         content={'Želite li izbrisat ' + name + '?'}

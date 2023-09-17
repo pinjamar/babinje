@@ -123,6 +123,13 @@ const AddNewItemModal: React.FC<Props> = (props) => {
                                 onChange={handleChange}
                             />
                             <Form.Field
+                                name='price'
+                                control={Input}
+                                label='Cijena'
+                            />
+                        </Form.Group>
+                        <Form.Group widths='equal'>
+                            <Form.Field
                                 name='link'
                                 control={Input}
                                 label='Link do artikla'
@@ -146,10 +153,12 @@ const AddNewItemModal: React.FC<Props> = (props) => {
                             value={formValues.desc}
                             onChange={handleChange}
                         />
-                        <Form.Checkbox
-                            name='isFungible'
-                            label='Artikl je potrošna roba'
-                        />
+                        <Form.Group widths='equal'>
+                            <Form.Checkbox
+                                name='isFungible'
+                                label='Artikl je potrošna roba'
+                            />
+                        </Form.Group>
                     </Form>
                 </Container>
             </Modal.Content>

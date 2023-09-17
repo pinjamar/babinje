@@ -4,6 +4,7 @@ import {
     Container,
     Dimmer,
     Header,
+    Label,
     Loader,
     Segment,
 } from 'semantic-ui-react'
@@ -65,7 +66,9 @@ const ItemsList: React.FC<{ isFungible: boolean }> = (props) => {
         <Segment basic>
             <Container text textAlign='center'>
                 {items.length == 0 ? (
-                    <Header as='h2'>Nema ničeg, dođite posli!</Header>
+                    <Header as='h2' style={{ marginBottom: '1em' }}>
+                        Nema ničeg, dođite posli!
+                    </Header>
                 ) : (
                     <p style={{ fontSize: '2em', marginBottom: '1em' }}>
                         &#128104; &#128105; &#128118; &#128049;
@@ -85,6 +88,17 @@ const ItemsList: React.FC<{ isFungible: boolean }> = (props) => {
                     />
                 ))}
             </Card.Group>
+            <Segment
+                basic
+                textAlign='center'
+                hidden={items.length === 0}
+                style={{ marginTop: '1.5em' }}>
+                <Label color='green'>A - manje od 20€</Label>
+                <Label color='olive'>B - do 50 € </Label>
+                <Label color='yellow'>C - do 100 €</Label>
+                <Label color='orange'>D - do 150 € </Label>
+                <Label color='red'>F - preko 150€</Label>
+            </Segment>
         </Segment>
     )
 }

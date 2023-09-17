@@ -28,13 +28,26 @@ const Dodavac: React.FC = () => {
             .catch((error) => {
                 console.error(error)
             })
-            .finally(() => setTimeout(() => setIsLoading(false), 1000))
+            .finally(() => setIsLoading(false))
     }
 
     const deleteItem = async (id) => {
         setIsLoading(true)
         try {
             const result = await babinjeProvider.delete(id)
+            if (result) {
+                fetchData()
+            }
+        } catch (error) {
+            alert(error)
+            setIsLoading(false)
+        }
+    }
+
+    const mutateGrade = async (id: number, grade: string) => {
+        setIsLoading(true)
+        try {
+            const result = await babinjeProvider.edit(id, grade)
             if (result) {
                 fetchData()
             }
@@ -82,6 +95,7 @@ const Dodavac: React.FC = () => {
                                 key={idx + '_babinje_li'}
                                 item={it}
                                 onDelete={() => deleteItem(it.id)}
+                                onRazredUpdate={(id, r) => mutateGrade(id, r)}
                             />
                         ))}
                     </Item.Group>

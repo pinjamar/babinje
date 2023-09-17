@@ -1,4 +1,5 @@
 from flask import Flask, jsonify, abort
+from flask_migrate import Migrate
 from flask_restful import Api
 from flask_cors import CORS
 
@@ -37,9 +38,11 @@ def create_app(isDebug: bool):
     app.config["MAIL_USE_TLS"] = babinje_config.mail_use_tls
     app.config["MAIL_USE_SSL"] = babinje_config.mail_use_ssl
     
-    api = Api(app)
+    api = Api(app)    
     mail.init_app(app)
     db.init_app(app)
+
+    migrate = Migrate(app, db)
 
     api.add_resource(ItemsController, "/api/v1/items")
     api.add_resource(UserController, "/api/v1/item/<int:item_id>/mutate")

@@ -11,6 +11,7 @@ import {
     Input,
     Container,
 } from 'semantic-ui-react'
+import RazredLabela from './RazredLabela'
 
 const logo = new URL('../images/baby-logo.jpg', import.meta.url)
 
@@ -81,7 +82,10 @@ const BabinjeCard: React.FC<Props> = (props) => {
         <Card color={item.user ? 'red' : 'green'}>
             <Card.Content>
                 <WrapInHref url={item.link}>
-                    <Image src={item.imgUrl ? item.imgUrl : logo} />
+                    <Image
+                        src={item.imgUrl ? item.imgUrl : logo}
+                        label={<RazredLabela grade={item.priceGrade} />}
+                    />
                 </WrapInHref>
                 <Card.Header
                     as={item.link && 'a'}

@@ -12,6 +12,7 @@ interface BabinjeItemProvider {
     create(item: BabinjeItemCreate): Promise<BabinjeItem>
     delete(itemId: number): Promise<boolean>
     checkLink(url: string): Promise<BabinjeItemLinkParse>
+    edit(id: number, razred: string): Promise<BabinjeItem>
 }
 
 async function parseError(e: Response): Promise<string> {
@@ -77,6 +78,28 @@ class _BabinjeItem implements BabinjeItemProvider {
         if (response.ok) {
             const jsonResult =
                 (await response.json()) as ApiResponse<BabinjeItemLinkParse>
+            return jsonResult.data
+        }
+
+        throw new Error(await parseError(response))
+    }
+
+    async edit(id: number, razred: string): Promise<BabinjeItem> {
+        const response = await fetch(
+            `/api/v1/bde372d8c36a146728d84419179a703f0d1bb63f530e384e/${id}`,
+            {
+                method: 'PUT',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ grade: razred }),
+            },
+        )
+
+        if (response.ok) {
+            const jsonResult =
+                (await response.json()) as ApiResponse<BabinjeItem>
             return jsonResult.data
         }
 

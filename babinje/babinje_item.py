@@ -49,6 +49,7 @@ babinje_item_marshaller = {
     "imgUrl": fields.String(attribute="img_url"),
     "isFungible": BooleanMarshaller(attribute="is_fungible"),
     "isBought": BooleanMarshaller(attribute="is_bought"),
+    "priceGrade": fields.String(attribute="price_grade"),
     "link": fields.String
 }
 
@@ -63,6 +64,21 @@ def create_initial_data(db: SQLAlchemy):
         new_item = BabinjeItem(name = args["name"], desc=args["desc"], link=args["link"])
         db.session.add(new_item)
     db.session.commit()
+
+def price_grade_from_price(price: float):
+    if price < 20:
+        return "A"
+    
+    if price < 50:
+        return "B"
+    
+    if price < 100:
+        return "C"
+    
+    if price < 150:
+        return "D"
+    
+    return "F"
 
 class User(db.Model):
     id = Column(Integer, primary_key=True)
@@ -82,4 +98,5 @@ class BabinjeItem(db.Model):
     img_url = Column(String(255), nullable=True)
     is_fungible = Column(Integer, nullable=False, default=0)
     reservation_timeout = Column(DateTime, nullable=True)
+    price_grade = Column(String(2), nullable=True)
     is_bought = Column(Integer, nullable=False, default=0)

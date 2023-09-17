@@ -6,6 +6,7 @@ interface BabinjeItem {
     isBought: number // = Column(Integer, nullable=False, default=0)
     isFungible: boolean
     link?: string
+    priceGrade?: string
     user?: User
 }
 

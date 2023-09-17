@@ -42,7 +42,7 @@ babinje_item_marshaller = {
     "name": fields.String,
     "desc": fields.String,
     "user": fields.Nested(user_marshaller, allow_null=True),
-    "imgUrl": fields.String,
+    "imgUrl": fields.String(attribute="img_url"),
     "isFungible": fields.Boolean,
     "isBought": fields.Boolean,
     "link": fields.String

@@ -59,7 +59,7 @@ const BabinjeCard: React.FC<Props> = (props) => {
     return (
         <Card>
             <Card.Content>
-                <Image floated='right' size='mini' src={logo} />
+                <Image floated='right' size='mini' src={item.imgUrl ?? logo} />
                 <Card.Header>{item.name}</Card.Header>
                 <Card.Meta>{item.user ? 'Rezervirano' : 'Slobodno'}</Card.Meta>
                 <Card.Description>

@@ -11,11 +11,39 @@ import {
     Segment,
 } from 'semantic-ui-react'
 
+const LandingPageIcon: React.FC<{ isError: boolean; isRegister: boolean }> = (
+    props,
+) => {
+    const { isRegister, isError } = props
+
+    return (
+        <>
+            {isError ? (
+                <Icon
+                    style={{ margin: 'auto' }}
+                    size='massive'
+                    color='red'
+                    name='ban'
+                />
+            ) : (
+                <Icon
+                    style={{ margin: '0.2em' }}
+                    size='massive'
+                    color={isRegister ? 'green' : 'yellow'}
+                    name={isRegister ? 'check circle' : 'hand spock'}
+                />
+            )}
+        </>
+    )
+}
+
 const ConfirmationLander: React.FC = () => {
     const { itemId, resetString } = useParams()
     const [isGreatSuccess, setGreatSuccess] = useState<boolean>(false)
     const [isLoading, setIsLoading] = useState<boolean>(true)
     const [result, setResult] = useState<MutationOperationResult | undefined>()
+
+    const isRegister = result?.isRegister ?? true
 
     useEffect(() => {
         fetch(`/api/v1/confirm/${itemId}/${resetString}`, { method: 'POST' })
@@ -32,7 +60,7 @@ const ConfirmationLander: React.FC = () => {
                 setResult(result.data)
                 setGreatSuccess(true)
             })
-            .catch((it) => {
+            .catch(() => {
                 setGreatSuccess(false)
             })
             .finally(() => {
@@ -45,43 +73,34 @@ const ConfirmationLander: React.FC = () => {
             <Dimmer active={isLoading} inverted>
                 <Loader>Učitavanje...</Loader>
             </Dimmer>
+            {!isLoading && (
+                <Container textAlign='center'>
+                    <LandingPageIcon
+                        isError={!isGreatSuccess}
+                        isRegister={isRegister}
+                    />
+                </Container>
+            )}
             <Container text textAlign='center' hidden={isLoading}>
-                {isGreatSuccess ? (
-                    <Icon
-                        style={{ margin: 'auto' }}
-                        size='massive'
-                        color='green'
-                        name={
-                            result?.isRegister ? 'check circle' : 'hand spock'
-                        }
-                    />
-                ) : (
-                    <Icon
-                        style={{ margin: 'auto' }}
-                        size='massive'
-                        color='red'
-                        name='ban'
-                    />
-                )}
                 <div hidden={!isGreatSuccess} style={{ fontSize: '1.33em' }}>
                     <Header as='h3' style={{ fontSize: '2em' }}>
-                        {result?.isRegister
+                        {isRegister
                             ? 'Hvala Vam na odabiru'
                             : 'Žao nam je što odlazite'}
                     </Header>
-                    {result?.isRegister ? (
+                    {isRegister ? (
                         <p>
-                            Rezervirali ste artikl: "{result?.item.name}" na
-                            svoje ime. Drago nam je da ste odlučili sudjelovati
-                            u olakšanju života nas i bebe i što ste koristili
-                            ovu aplikaciju za to!
+                            Rezervirali ste artikl: &quot;{result?.item.name}
+                            &quot; na svoje ime. Drago nam je da ste odlučili
+                            sudjelovati u olakšanju života nas i bebe i što ste
+                            koristili ovu aplikaciju za to!
                         </p>
                     ) : (
                         <p>
-                            Odustali ste od artikla: "{result?.item.name}". Žao
-                            nam je što odlazite, no pogledajte još jednom popis
-                            artikala pa možda Vam odgovara neki drugi. Hvala Vam
-                            !
+                            Odustali ste od artikla: &quot;{result?.item.name}
+                            &quot;. Žao nam je što odlazite, no pogledajte još
+                            jednom popis artikala pa možda Vam odgovara neki
+                            drugi. Hvala Vam !
                         </p>
                     )}
                     <p>
@@ -89,31 +108,35 @@ const ConfirmationLander: React.FC = () => {
                         drugo
                     </p>
                 </div>
-                <div hidden={isGreatSuccess}>
+                <div hidden={isGreatSuccess || isLoading}>
                     <Header as='h3' style={{ fontSize: '2em' }}>
                         Došlo je do pogreške
                     </Header>
                     <div style={{ fontSize: '1.33em' }}>
                         <p>
                             Molim Vas ponovite registraciju! Ili je link istekao
-                            ili je došlo do greške.
+                            ili je došlo do greške. Pričekajte minutu dvije
+                            prije nego što ponovite
                         </p>
                         <p>
-                            Kontaktirajte brbulic@codebase.hr za pomoć ako
-                            ponovljena rezervacija ne upali
+                            Kontaktirajte{' '}
+                            <a href='mailto:brbulic@codebase.hr'>me</a> za pomoć
+                            ako ponovljena rezervacija ne upali
                         </p>
                     </div>
                 </div>
-                <Divider
-                    as='h4'
-                    className='header'
-                    horizontal
-                    style={{
-                        margin: '3em 0em',
-                        textTransform: 'uppercase',
-                    }}>
-                    <a href='/'>babinje</a>
-                </Divider>
+                <div hidden={isLoading}>
+                    <Divider
+                        as='h4'
+                        className='header'
+                        horizontal
+                        style={{
+                            margin: '3em 0em',
+                            textTransform: 'uppercase',
+                        }}>
+                        <a href='/'>babinje</a>
+                    </Divider>
+                </div>
             </Container>
         </Segment>
     )

@@ -10,7 +10,7 @@ import {
     Loader,
     Segment,
 } from 'semantic-ui-react'
-import BabinjeListItem from '../components/BabinjeListItem'
+import BabinjeAdminListItem from '../components/BabinjeAdminListItem'
 import AddNewItemModal from '../components/AddNewItemModal'
 import babinjeProvider from '../servisi/BabinjeItemProvider'
 
@@ -63,7 +63,7 @@ const Dodavac: React.FC = () => {
                 <Loader />
             </Dimmer>
             <Container>
-                <Header as='h2'>Popis stvari</Header>
+                <Header as='h2'>Popis stvari - Admin Panel</Header>
                 <p>Lista stvari koje se nalaze trenutno</p>
                 <Segment basic textAlign='right'>
                     <Button
@@ -78,7 +78,7 @@ const Dodavac: React.FC = () => {
                 <Container>
                     <Item.Group divided>
                         {items.map((it, idx) => (
-                            <BabinjeListItem
+                            <BabinjeAdminListItem
                                 key={idx + '_babinje_li'}
                                 item={it}
                                 onDelete={() => deleteItem(it.id)}

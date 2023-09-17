@@ -9,8 +9,8 @@ interface Props {
     onDelete()
 }
 
-const BabinjeListItem: React.FC<Props> = (props) => {
-    const { name, link, desc, user } = props.item
+const BabinjeAdminListItem: React.FC<Props> = (props) => {
+    const { name, link, desc, user, imgUrl } = props.item
 
     const [isConfirmOpen, setConfirmOpen] = useState(false)
 
@@ -23,7 +23,7 @@ const BabinjeListItem: React.FC<Props> = (props) => {
 
     return (
         <Item>
-            <Item.Image size='tiny' src={logo} alt='logo' />
+            <Item.Image size='tiny' src={imgUrl ?? logo} alt='logo' />
 
             <Item.Content>
                 <Item.Header>{name}</Item.Header>
@@ -52,4 +52,4 @@ const BabinjeListItem: React.FC<Props> = (props) => {
     )
 }
 
-export default BabinjeListItem
+export default BabinjeAdminListItem

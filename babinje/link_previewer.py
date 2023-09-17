@@ -17,6 +17,7 @@ class Result:
     name: str = None
     img_url: str = None
     desc: str = None
+    link: str = None
     def __init__(self, preview: LinkPreview):
         self.name = preview.force_title
         self.desc = preview.description 
@@ -25,7 +26,8 @@ class Result:
 result_marshaller = {
     "name": fields.String,
     "desc": fields.String,
-    "img_url": fields.String
+    "imgUrl": fields.String(attribute="img_url"),
+    "link": fields.String
 }
 
 # /api/v1/parseUrl
@@ -42,6 +44,8 @@ class LinkPreviewer(Resource):
         
         if result:
             preview = link_preview(url, parser="lxml")
-            return Result(preview=preview), 200
+            result = Result(preview=preview)
+            result.link = url
+            return result, 200
         else:
             api_error(400, -1918, "This is an invalid url")

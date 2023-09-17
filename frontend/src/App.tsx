@@ -9,7 +9,9 @@ const App: React.FC = () => {
         <ToastProvider>
             <Menu inverted>
                 <Container>
-                    <Menu.Item as='div'>Babinje</Menu.Item>
+                    <Menu.Item as='a' href='/'>
+                        Babinje
+                    </Menu.Item>
                 </Container>
             </Menu>
 

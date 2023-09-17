@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
     Button,
     Container,
@@ -7,17 +7,20 @@ import {
     FormProps,
     Header,
     Input,
+    Loader,
     Modal,
     Segment,
     TextArea,
 } from 'semantic-ui-react'
 import babinjeProvider from '../servisi/BabinjeItemProvider'
 import { BabinjeItemLinkParse } from '../Models'
+import { useToast } from '../toast/ToastProvider'
 
 interface result {
     name: string
     desc: string
     link: string
+    isFungible: boolean
     imgUrl: string
 }
 
@@ -27,27 +30,40 @@ interface Props {
     onSubmit?(n: result): void
 }
 
+const DEAFULT_FORM_VALUES = {
+    name: '',
+    link: '',
+    imgUrl: '',
+    desc: '',
+}
+
 const AddNewItemModal: React.FC<Props> = (props) => {
     const { isOpen } = props
 
-    const [state, setState] = useState<BabinjeItemLinkParse>({
-        name: '',
-        link: '',
-        imgUrl: '',
-        desc: '',
-    })
+    const [formValues, setFormValues] = useState<BabinjeItemLinkParse>(
+        Object.assign({}, DEAFULT_FORM_VALUES),
+    )
+    const [isLinkParserLoading, setLinkParserLoading] = useState(false)
+    const toast = useToast()
 
-    const handleChange = (e, { name, value }) => setState({ [name]: value })
+    useEffect(() => {
+        if (!isOpen) {
+            setFormValues(Object.assign({}, DEAFULT_FORM_VALUES))
+        }
+    }, [props.isOpen])
+
+    const handleChange = (e, { name, value }) =>
+        setFormValues({ [name]: value })
 
     const onCreate = (e: any, data: FormProps) => {
         e.preventDefault()
 
         const form = e.target
         const formData = new FormData(form)
+        const values = Object.fromEntries(formData.entries())
 
-        props.onSubmit?.(
-            Object.fromEntries(formData.entries()) as any as result,
-        )
+        values.isFungible = 'isFungible' in values
+        props.onSubmit?.(values)
     }
 
     const onChange = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -56,24 +72,35 @@ const AddNewItemModal: React.FC<Props> = (props) => {
         const formData = new FormData(e.currentTarget)
         const url = Object.fromEntries(formData.entries()).link2 as string
 
+        setLinkParserLoading(true)
         try {
             const result = await babinjeProvider.checkLink(url)
-            setState(result)
+            setFormValues(result)
         } catch (error) {
-            alert(error.message)
+            toast.showError(error.message)
         }
+        setLinkParserLoading(false)
     }
 
     return (
         <Modal open={isOpen}>
             <Modal.Header>Dodaj novi</Modal.Header>
             <Modal.Content>
-                <Segment basic style={{ padding: 0 }}>
-                    <Dimmer inverted>Loading</Dimmer>
+                <Segment basic style={{ padding: '0em 0em 3em 0em' }}>
+                    <Dimmer active={isLinkParserLoading} inverted>
+                        <Loader>Loading...</Loader>
+                    </Dimmer>
+                    <Header
+                        textAlign='center'
+                        as='h3'
+                        style={{ margin: '0.5em 0em' }}>
+                        Automatski iz linka
+                    </Header>
                     <Form onSubmit={onChange}>
                         <Form.Group widths={'equal'}>
                             <Form.Field
                                 name='link2'
+                                required
                                 control={Input}
                                 placeholder='Link do artikla'
                             />
@@ -81,9 +108,7 @@ const AddNewItemModal: React.FC<Props> = (props) => {
                         </Form.Group>
                     </Form>
                 </Segment>
-                <Container
-                    textAlign='center'
-                    style={{ 'margin-bottom': '1em' }}>
+                <Container textAlign='center' style={{ marginBottom: '1em' }}>
                     <Header as='h3'>Ručni unos</Header>
                 </Container>
                 <Container>
@@ -93,7 +118,7 @@ const AddNewItemModal: React.FC<Props> = (props) => {
                                 name='name'
                                 control={Input}
                                 label='Ime'
-                                value={state.name}
+                                value={formValues.name}
                                 required
                                 onChange={handleChange}
                             />
@@ -101,14 +126,14 @@ const AddNewItemModal: React.FC<Props> = (props) => {
                                 name='link'
                                 control={Input}
                                 label='Link do artikla'
-                                value={state.link}
+                                value={formValues.link}
                                 onChange={handleChange}
                             />
                             <Form.Field
                                 name='imgUrl'
                                 control={Input}
                                 label='Link do slike'
-                                value={state.imgUrl}
+                                value={formValues.imgUrl}
                                 onChange={handleChange}
                             />
                         </Form.Group>
@@ -118,18 +143,26 @@ const AddNewItemModal: React.FC<Props> = (props) => {
                             label='Opis'
                             required
                             placeholder='Opis'
-                            value={state.desc}
+                            value={formValues.desc}
                             onChange={handleChange}
+                        />
+                        <Form.Checkbox
+                            name='isFungible'
+                            label='Artikl je potrošna roba'
                         />
                     </Form>
                 </Container>
             </Modal.Content>
             <Modal.Actions>
-                <Button onClick={props.onClose} color='black'>
+                <Button
+                    disabled={isLinkParserLoading}
+                    onClick={props.onClose}
+                    color='black'>
                     Cancel
                 </Button>
                 <Button
                     form='nova-forma'
+                    disabled={isLinkParserLoading}
                     type='submit'
                     content='Napravi novi'
                     labelPosition='right'

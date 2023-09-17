@@ -15,7 +15,9 @@ class ItemsAdmin(Resource):
     def post(self):
         args = items_post_args.parse_args()
 
-        new_item = BabinjeItem(name = args["name"], desc=args["desc"], link=args["link"], img_url=args["imgUrl"], is_fungible=args["isFungible"])
+        is_fungible = 1 if args["isFungible"] else 0
+
+        new_item = BabinjeItem(name = args["name"], desc=args["desc"], link=args["link"], img_url=args["imgUrl"], is_fungible=is_fungible)
         db.session.add(new_item)
         db.session.commit()
 

@@ -31,6 +31,10 @@ class EmailMarshaller(fields.Raw):
         pr2 = pr2[0] + '**.*' + pr2[-1]
 
         return pr1 + pr2
+    
+class BooleanMarshaller(fields.Raw):
+    def format(self, mail: int):
+        return False if mail == 0 else True
 
 user_marshaller = {
     "id": fields.Integer,
@@ -43,8 +47,8 @@ babinje_item_marshaller = {
     "desc": fields.String,
     "user": fields.Nested(user_marshaller, allow_null=True),
     "imgUrl": fields.String(attribute="img_url"),
-    "isFungible": fields.Boolean,
-    "isBought": fields.Boolean,
+    "isFungible": BooleanMarshaller(attribute="is_fungible"),
+    "isBought": BooleanMarshaller(attribute="is_bought"),
     "link": fields.String
 }
 

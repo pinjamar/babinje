@@ -4,6 +4,7 @@ interface BabinjeItem {
     desc?: string // = Column(String(10000), nullable=True)
     imgUrl?: string // = Column(String(255), nullable=True)
     isBought: number // = Column(Integer, nullable=False, default=0)
+    isFungible: boolean
     link?: string
     user?: User
 }

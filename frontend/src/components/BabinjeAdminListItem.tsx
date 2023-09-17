@@ -23,7 +23,7 @@ const BabinjeAdminListItem: React.FC<Props> = (props) => {
 
     return (
         <Item>
-            <Item.Image size='tiny' src={imgUrl ?? logo} alt='logo' />
+            <Item.Image size='tiny' src={imgUrl ? imgUrl : logo} alt='logo' />
 
             <Item.Content>
                 <Item.Header>{name}</Item.Header>

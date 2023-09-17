@@ -7,7 +7,8 @@ import servis from '../servisi/UserReservationServis'
 import { useToast } from '../toast/ToastProvider'
 import { ToastType } from '../toast/ToastItem'
 
-const ItemsList: React.FC = () => {
+const ItemsList: React.FC<{ isFungible: boolean }> = (props) => {
+    const { isFungible } = props
     const [items, setItems] = useState<Array<BabinjeItem>>([])
     const [isLoading, setLoading] = useState(false)
     const toast = useToast()
@@ -44,7 +45,8 @@ const ItemsList: React.FC = () => {
                 }
             })
             .then((json) => {
-                setItems(json.data ?? [])
+                const artikli = json.data ?? []
+                setItems(artikli.filter((it) => it.isFungible == isFungible))
             })
             .catch((error) => {
                 console.error(error)

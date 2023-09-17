@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { PropsWithChildren, useState } from 'react'
 import { BabinjeItem } from '../Models'
 import {
     Card,
@@ -30,6 +30,26 @@ interface Props {
     onRelease(n: UnregisterFormValues): void
 }
 
+interface HrefProps extends PropsWithChildren {
+    url?: string
+}
+
+const WrapInHref: React.FC<HrefProps> = (props) => {
+    const { url, children } = props
+
+    return (
+        <>
+            {url ? (
+                <a href={url} target='_blank' rel='noreferrer'>
+                    {children}
+                </a>
+            ) : (
+                children
+            )}
+        </>
+    )
+}
+
 const BabinjeCard: React.FC<Props> = (props) => {
     const item = props.data
 
@@ -57,120 +77,123 @@ const BabinjeCard: React.FC<Props> = (props) => {
     }
 
     return (
-        <Card>
+        <Card color={item.user ? 'red' : 'green'}>
             <Card.Content>
-                <Image floated='right' size='mini' src={item.imgUrl ?? logo} />
-                <Card.Header>{item.name}</Card.Header>
+                <WrapInHref url={item.link}>
+                    <Image src={item.imgUrl ? item.imgUrl : logo} />
+                </WrapInHref>
+                <Card.Header
+                    as={item.link && 'a'}
+                    href={item.link}
+                    target='_blank'>
+                    {item.name}
+                </Card.Header>
                 <Card.Meta>{item.user ? 'Rezervirano' : 'Slobodno'}</Card.Meta>
-                <Card.Description>
-                    {item.link ? (
-                        <>
-                            <a
-                                href={item.link}
-                                target='_blank'
-                                rel='noreferrer'>
-                                Link
-                            </a>{' '}
-                            - {item.desc}
-                        </>
-                    ) : (
-                        <div>{item.desc}</div>
-                    )}
-                </Card.Description>
+                <Card.Description>{item.desc}</Card.Description>
             </Card.Content>
-            <Card.Content extra>
-                <div className='ui two buttons'>
-                    <Modal
-                        onClose={() => setOpen(false)}
-                        onOpen={() => setOpen(true)}
-                        open={open}
-                        trigger={
-                            <Button basic color='green' disabled={!!item.user}>
-                                Rezerviraj
-                            </Button>
-                        }>
-                        <Modal.Header>
-                            Želite li rezervirati ovaj proizvod?
-                        </Modal.Header>
-                        <Modal.Content image>
-                            <Form
-                                id='reserve_form'
-                                onSubmit={onReserveFormSubmitted}>
-                                <Form.Field
-                                    name='nameSurname'
-                                    control={Input}
-                                    label='Ime'
-                                    required
+            {!item.isFungible && (
+                <Card.Content extra>
+                    <div className='ui two buttons'>
+                        <Modal
+                            onClose={() => setOpen(false)}
+                            onOpen={() => setOpen(true)}
+                            open={open}
+                            trigger={
+                                <Button
+                                    basic
+                                    color='green'
+                                    disabled={!!item.user}>
+                                    Rezerviraj
+                                </Button>
+                            }>
+                            <Modal.Header>
+                                Želite li rezervirati ovaj proizvod?
+                            </Modal.Header>
+                            <Modal.Content image>
+                                <Form
+                                    id='reserve_form'
+                                    onSubmit={onReserveFormSubmitted}>
+                                    <Form.Field
+                                        name='nameSurname'
+                                        control={Input}
+                                        label='Ime'
+                                        required
+                                    />
+                                    <Form.Field
+                                        name='email'
+                                        control={Input}
+                                        label='Email'
+                                        required
+                                    />
+                                </Form>
+                            </Modal.Content>
+                            <Modal.Actions>
+                                <Button
+                                    color='black'
+                                    onClick={() => setOpen(false)}
+                                    negative>
+                                    Neeću, falija san
+                                </Button>
+                                <Button
+                                    content='Da, potvrdi!'
+                                    labelPosition='right'
+                                    icon='checkmark'
+                                    form='reserve_form'
+                                    type='submit'
+                                    positive
                                 />
-                                <Form.Field
-                                    name='email'
-                                    control={Input}
-                                    label='Email'
-                                    required
-                                />
-                            </Form>
-                        </Modal.Content>
-                        <Modal.Actions>
-                            <Button
-                                color='black'
-                                onClick={() => setOpen(false)}
-                                negative>
-                                Neeću, falija san
-                            </Button>
-                            <Button
-                                content='Da, potvrdi!'
-                                labelPosition='right'
-                                icon='checkmark'
-                                form='reserve_form'
-                                type='submit'
-                                positive
+                            </Modal.Actions>
+                        </Modal>
+                        <Modal
+                            closeIcon
+                            open={release}
+                            trigger={
+                                <Button basic color='red' disabled={!item.user}>
+                                    Otpusti
+                                </Button>
+                            }
+                            onClose={() => setRelease(false)}
+                            onOpen={() => setRelease(true)}>
+                            <Header
+                                icon='archive'
+                                content='Archive Old Messages'
                             />
-                        </Modal.Actions>
-                    </Modal>
-                    <Modal
-                        closeIcon
-                        open={release}
-                        trigger={
-                            <Button basic color='red' disabled={!item.user}>
-                                Otpusti
-                            </Button>
-                        }
-                        onClose={() => setRelease(false)}
-                        onOpen={() => setRelease(true)}>
-                        <Header icon='archive' content='Archive Old Messages' />
-                        <Modal.Content>
-                            <p>
-                                Ovaj proizvod je registriran na{' '}
-                                {item.user?.email}
-                            </p>
-                            <p>Potvrdite mail da bi odregistrirali proizvod</p>
-                            <Form
-                                id='release_form'
-                                onSubmit={onReleaseFormSubmitted}>
-                                <Form.Field
-                                    name='email'
-                                    control={Input}
-                                    label='Email'
-                                    required
-                                />
-                            </Form>
-                        </Modal.Content>
-                        <Modal.Actions>
-                            <Button
-                                color='red'
-                                onClick={() => setRelease(false)}>
-                                <Icon name='remove' /> Ne
-                            </Button>
-                            <Button
-                                color='green'
-                                type='submit'
-                                form='release_form'>
-                                <Icon name='checkmark' /> Da
-                            </Button>
-                        </Modal.Actions>
-                    </Modal>
-                </div>
-            </Card.Content>
+                            <Modal.Content>
+                                <p>
+                                    Ovaj proizvod je registriran na{' '}
+                                    {item.user?.email}
+                                </p>
+                                <p>
+                                    Potvrdite mail da bi odregistrirali proizvod
+                                </p>
+                                <Form
+                                    id='release_form'
+                                    onSubmit={onReleaseFormSubmitted}>
+                                    <Form.Field
+                                        name='email'
+                                        control={Input}
+                                        label='Email'
+                                        required
+                                    />
+                                </Form>
+                            </Modal.Content>
+                            <Modal.Actions>
+                                <Button
+                                    color='red'
+                                    onClick={() => setRelease(false)}>
+                                    <Icon name='remove' /> Ne
+                                </Button>
+                                <Button
+                                    color='green'
+                                    type='submit'
+                                    form='release_form'>
+                                    <Icon name='checkmark' /> Da
+                                </Button>
+                            </Modal.Actions>
+                        </Modal>
+                    </div>
+                </Card.Content>
+            )}
         </Card>
     )
 }

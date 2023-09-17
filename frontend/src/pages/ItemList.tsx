@@ -4,7 +4,6 @@ import {
     Container,
     Dimmer,
     Header,
-    Label,
     Loader,
     Segment,
 } from 'semantic-ui-react'
@@ -14,6 +13,7 @@ import BabinjeCard, { RegisterFormValues } from '../components/BabinjeCard'
 import servis from '../servisi/UserReservationServis'
 import { useToast } from '../toast/ToastProvider'
 import { ToastType } from '../toast/ToastItem'
+import IndeksCijena from '../components/IndeksCijena'
 
 const ItemsList: React.FC<{ isFungible: boolean }> = (props) => {
     const { isFungible } = props
@@ -75,6 +75,7 @@ const ItemsList: React.FC<{ isFungible: boolean }> = (props) => {
                     </p>
                 )}
             </Container>
+            <IndeksCijena hidden={items.length === 0} />
             <Card.Group centered>
                 <Dimmer active={isLoading} inverted>
                     <Loader inverted>Loading</Loader>
@@ -88,17 +89,6 @@ const ItemsList: React.FC<{ isFungible: boolean }> = (props) => {
                     />
                 ))}
             </Card.Group>
-            <Segment
-                basic
-                textAlign='center'
-                hidden={items.length === 0}
-                style={{ marginTop: '1.5em' }}>
-                <Label color='green'>A - manje od 20€</Label>
-                <Label color='olive'>B - do 50 € </Label>
-                <Label color='yellow'>C - do 100 €</Label>
-                <Label color='orange'>D - do 150 € </Label>
-                <Label color='red'>F - preko 150€</Label>
-            </Segment>
         </Segment>
     )
 }

@@ -13,6 +13,7 @@ import {
 import BabinjeAdminListItem from '../components/BabinjeAdminListItem'
 import AddNewItemModal from '../components/AddNewItemModal'
 import babinjeProvider from '../servisi/BabinjeItemProvider'
+import IndeksCijena from '../components/IndeksCijena'
 
 const Dodavac: React.FC = () => {
     const [items, setItems] = useState<BabinjeItem[]>([])
@@ -87,6 +88,7 @@ const Dodavac: React.FC = () => {
                         labelPosition='left'
                     />
                 </Segment>
+                <IndeksCijena hidden={items.length === 0} />
                 <Divider horizontal></Divider>
                 <Container>
                     <Item.Group divided>

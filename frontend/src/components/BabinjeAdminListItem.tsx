@@ -40,11 +40,15 @@ const BabinjeAdminListItem: React.FC<Props> = (props) => {
             <Item.Image size='tiny' src={imgUrl ? imgUrl : logo} alt='logo' />
 
             <Item.Content>
-                <Item.Header>{name}</Item.Header>
+                <Item.Header
+                    as='a'
+                    href={link ?? '#'}
+                    target='_blank'
+                    rel='noreferrer'>
+                    {name}
+                </Item.Header>
                 <Item.Meta>
-                    <a href={link ?? '#'} target='_blank' rel='noreferrer'>
-                        Link
-                    </a>
+                    {user ? 'Rezervirao: ' + user.email : 'Slobodno'}
                 </Item.Meta>
                 <Item.Description>
                     <p>{desc}</p>
@@ -53,11 +57,10 @@ const BabinjeAdminListItem: React.FC<Props> = (props) => {
                     <Button size='mini' onClick={() => setConfirmOpen(true)}>
                         Izbriši
                     </Button>
-                    <RazredLabela grade={props.item.priceGrade} />
                     <Dropdown
                         options={options}
-                        clearable
-                        placeholder='Razred cijene'
+                        selection
+                        placeholder='Razred'
                         value={props.item.priceGrade}
                         onChange={(d, v) => onChange(props.item.id, v.value)}
                     />
@@ -67,7 +70,6 @@ const BabinjeAdminListItem: React.FC<Props> = (props) => {
                         onCancel={onClose}
                         onConfirm={onDelete}
                     />
-                    {user ? 'Rezervirao: ' + user.email : 'Slobodno'}
                 </Item.Extra>
             </Item.Content>
         </Item>

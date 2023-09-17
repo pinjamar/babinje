@@ -25,10 +25,10 @@ const App: React.FC = () => {
                         Babinje
                     </Menu.Item>
                     <Menu.Item as='a' href='/'>
-                        Artikli
+                        Baby Gear
                     </Menu.Item>
                     <Menu.Item as='a' href='/potrosna'>
-                        Potrošna roba
+                        Njega Bebe
                     </Menu.Item>
                     {!isProduction && (
                         <Menu.Item

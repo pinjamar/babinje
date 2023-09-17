@@ -9,6 +9,7 @@ import {
     Icon,
     Form,
     Input,
+    Container,
 } from 'semantic-ui-react'
 
 const logo = new URL('../images/baby-logo.jpg', import.meta.url)
@@ -88,7 +89,11 @@ const BabinjeCard: React.FC<Props> = (props) => {
                     target='_blank'>
                     {item.name}
                 </Card.Header>
-                <Card.Meta>{item.user ? 'Rezervirano' : 'Slobodno'}</Card.Meta>
+                {!item.isFungible && (
+                    <Card.Meta>
+                        {item.user ? 'Rezervirano' : 'Slobodno'}
+                    </Card.Meta>
+                )}
                 <Card.Description>{item.desc}</Card.Description>
             </Card.Content>
             {!item.isFungible && (
@@ -106,26 +111,43 @@ const BabinjeCard: React.FC<Props> = (props) => {
                                     Rezerviraj
                                 </Button>
                             }>
-                            <Modal.Header>
-                                Želite li rezervirati ovaj proizvod?
-                            </Modal.Header>
+                            <Header
+                                icon='share'
+                                content='Želite li rezervirati ovaj proizvod?'></Header>
                             <Modal.Content image>
-                                <Form
-                                    id='reserve_form'
-                                    onSubmit={onReserveFormSubmitted}>
-                                    <Form.Field
-                                        name='nameSurname'
-                                        control={Input}
-                                        label='Ime'
-                                        required
-                                    />
-                                    <Form.Field
-                                        name='email'
-                                        control={Input}
-                                        label='Email'
-                                        required
-                                    />
-                                </Form>
+                                <Container>
+                                    <p style={{ textAlign: 'center' }}>
+                                        Uspješnim unosom podataka dobijate mail
+                                        u kojem potvrđujete Vašu rezervaciju!
+                                    </p>
+                                    <Form
+                                        id='reserve_form'
+                                        onSubmit={onReserveFormSubmitted}>
+                                        <Form.Group widths='equal'>
+                                            <Form.Field
+                                                name='nameSurname'
+                                                control={Input}
+                                                label='Ime'
+                                                required
+                                            />
+                                            <Form.Field
+                                                name='email'
+                                                control={Input}
+                                                label='Email'
+                                                required
+                                            />
+                                        </Form.Group>
+                                    </Form>
+                                    <p
+                                        style={{
+                                            fontSize: '0.8rem',
+                                            textAlign: 'right',
+                                        }}>
+                                        Email će se koristiti u svrhu potvrde
+                                        ili otkazivanja rezervacije i u nikakve
+                                        druge svrhe
+                                    </p>
+                                </Container>
                             </Modal.Content>
                             <Modal.Actions>
                                 <Button
@@ -155,8 +177,8 @@ const BabinjeCard: React.FC<Props> = (props) => {
                             onClose={() => setRelease(false)}
                             onOpen={() => setRelease(true)}>
                             <Header
-                                icon='archive'
-                                content='Archive Old Messages'
+                                icon='user cancel'
+                                content='Izbriši rezervaciju'
                             />
                             <Modal.Content>
                                 <p>

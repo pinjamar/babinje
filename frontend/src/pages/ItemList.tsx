@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Card, Dimmer, Loader, Segment } from 'semantic-ui-react'
+import { Card, Dimmer, Header, Loader, Segment } from 'semantic-ui-react'
 import { ApiResponse, BabinjeItem } from '../Models'
 import BabinjeCard, { RegisterFormValues } from '../components/BabinjeCard'
 
@@ -60,6 +60,11 @@ const ItemsList: React.FC<{ isFungible: boolean }> = (props) => {
                 <Dimmer active={isLoading} inverted>
                     <Loader inverted>Loading</Loader>
                 </Dimmer>
+                {items.length == 0 ? (
+                    <Header>Nema ničeg, dođite posli!</Header>
+                ) : (
+                    <></>
+                )}
                 {items.map((it, idx) => (
                     <BabinjeCard
                         key={idx + '_card_main'}

@@ -1,17 +1,28 @@
-import { ApiResponse, BabinjeItem } from '../Models'
+import { ApiResponse, BabinjeItem, BabinjeItemLinkParse } from '../Models'
 
 interface BabinjeItemCreate {
     name: string
     desc: string
     link?: string
+    imgUrl?: string
 }
 
 interface BabinjeItemProvider {
     getAll(): Promise<Array<BabinjeItem>>
     create(item: BabinjeItemCreate): Promise<BabinjeItem>
     delete(itemId: number): Promise<boolean>
+    checkLink(url: string): Promise<BabinjeItemLinkParse>
+    edit(id: number, razred: string): Promise<BabinjeItem>
 }
 
+async function parseError(e: Response): Promise<string> {
+    try {
+        const json = await e.json()
+        return `Greška: ${json.message}, kod ${json.code}`
+    } catch {
+        return 'Nepoznata greška - ' + e.status
+    }
+}
 class _BabinjeItem implements BabinjeItemProvider {
     async getAll(): Promise<BabinjeItem[]> {
         return fetch('api/v1/items')
@@ -51,6 +62,50 @@ class _BabinjeItem implements BabinjeItemProvider {
         return jsonResult.data
     }
 
+    async checkLink(url: string): Promise<BabinjeItemLinkParse> {
+        const dto = {
+            url,
+        }
+        const response = await fetch('/api/v1/parseUrl', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(dto),
+        })
+
+        if (response.ok) {
+            const jsonResult =
+                (await response.json()) as ApiResponse<BabinjeItemLinkParse>
+            return jsonResult.data
+        }
+
+        throw new Error(await parseError(response))
+    }
+
+    async edit(id: number, razred: string): Promise<BabinjeItem> {
+        const response = await fetch(
+            `/api/v1/bde372d8c36a146728d84419179a703f0d1bb63f530e384e/${id}`,
+            {
+                method: 'PUT',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ grade: razred }),
+            },
+        )
+
+        if (response.ok) {
+            const jsonResult =
+                (await response.json()) as ApiResponse<BabinjeItem>
+            return jsonResult.data
+        }
+
+        throw new Error(await parseError(response))
+    }
+
     async delete(itemId: number): Promise<boolean> {
         const response = await fetch(
             `/api/v1/bde372d8c36a146728d84419179a703f0d1bb63f530e384e/${itemId}`,
@@ -62,9 +117,12 @@ class _BabinjeItem implements BabinjeItemProvider {
             },
         )
 
-        const jsonResult = (await response.json()) as ApiResponse<boolean>
+        if (response.ok) {
+            const jsonResult = (await response.json()) as ApiResponse<boolean>
+            return jsonResult.data ?? false
+        }
 
-        return jsonResult.data ?? false
+        throw new Error(await parseError(response))
     }
 }
 

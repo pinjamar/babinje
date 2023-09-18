@@ -10,9 +10,10 @@ import {
     Loader,
     Segment,
 } from 'semantic-ui-react'
-import BabinjeListItem from '../components/BabinjeListItem'
+import BabinjeAdminListItem from '../components/BabinjeAdminListItem'
 import AddNewItemModal from '../components/AddNewItemModal'
 import babinjeProvider from '../servisi/BabinjeItemProvider'
+import IndeksCijena from '../components/IndeksCijena'
 
 const Dodavac: React.FC = () => {
     const [items, setItems] = useState<BabinjeItem[]>([])
@@ -28,13 +29,26 @@ const Dodavac: React.FC = () => {
             .catch((error) => {
                 console.error(error)
             })
-            .finally(() => setTimeout(() => setIsLoading(false), 1000))
+            .finally(() => setIsLoading(false))
     }
 
     const deleteItem = async (id) => {
         setIsLoading(true)
         try {
             const result = await babinjeProvider.delete(id)
+            if (result) {
+                fetchData()
+            }
+        } catch (error) {
+            alert(error)
+            setIsLoading(false)
+        }
+    }
+
+    const mutateGrade = async (id: number, grade: string) => {
+        setIsLoading(true)
+        try {
+            const result = await babinjeProvider.edit(id, grade)
             if (result) {
                 fetchData()
             }
@@ -63,7 +77,7 @@ const Dodavac: React.FC = () => {
                 <Loader />
             </Dimmer>
             <Container>
-                <Header as='h2'>Popis stvari</Header>
+                <Header as='h2'>Popis stvari - Admin Panel</Header>
                 <p>Lista stvari koje se nalaze trenutno</p>
                 <Segment basic textAlign='right'>
                     <Button
@@ -74,14 +88,16 @@ const Dodavac: React.FC = () => {
                         labelPosition='left'
                     />
                 </Segment>
+                <IndeksCijena hidden={items.length === 0} />
                 <Divider horizontal></Divider>
                 <Container>
                     <Item.Group divided>
                         {items.map((it, idx) => (
-                            <BabinjeListItem
+                            <BabinjeAdminListItem
                                 key={idx + '_babinje_li'}
                                 item={it}
                                 onDelete={() => deleteItem(it.id)}
+                                onRazredUpdate={(id, r) => mutateGrade(id, r)}
                             />
                         ))}
                     </Item.Group>

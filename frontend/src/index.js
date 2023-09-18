@@ -17,7 +17,11 @@ const router = createBrowserRouter([
         children: [
             {
                 path: '',
-                element: <ItemList />,
+                element: <ItemList isFungible={false} />,
+            },
+            {
+                path: 'potrosna',
+                element: <ItemList isFungible={true} />,
             },
             {
                 path: '95a0bd0ed04ad8e8b93cef059bf99ac0b338b259e6bd084e',

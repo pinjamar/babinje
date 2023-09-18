@@ -93,11 +93,6 @@ const BabinjeCard: React.FC<Props> = (props) => {
                     target='_blank'>
                     {item.name}
                 </Card.Header>
-                {!item.isFungible && (
-                    <Card.Meta>
-                        {item.user ? 'Rezervirano' : 'Slobodno'}
-                    </Card.Meta>
-                )}
                 <Card.Description>{item.desc}</Card.Description>
             </Card.Content>
             {!item.isFungible && (
@@ -108,12 +103,14 @@ const BabinjeCard: React.FC<Props> = (props) => {
                             onOpen={() => setOpen(true)}
                             open={open}
                             trigger={
-                                <Button
-                                    basic
-                                    color='green'
-                                    disabled={!!item.user}>
-                                    Rezerviraj
-                                </Button>
+                                !item.user && (
+                                    <Button
+                                        basic
+                                        color='green'
+                                        hidden={item.user}>
+                                        Rezerviraj
+                                    </Button>
+                                )
                             }>
                             <Header
                                 icon='share'
@@ -174,9 +171,14 @@ const BabinjeCard: React.FC<Props> = (props) => {
                             closeIcon
                             open={release}
                             trigger={
-                                <Button basic color='red' disabled={!item.user}>
-                                    Otpusti
-                                </Button>
+                                item.user && (
+                                    <Button
+                                        basic
+                                        color='red'
+                                        hidden={!item.user}>
+                                        Otpusti
+                                    </Button>
+                                )
                             }
                             onClose={() => setRelease(false)}
                             onOpen={() => setRelease(true)}>

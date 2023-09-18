@@ -3,7 +3,7 @@ from sqlalchemy import select
 from .babinje_item import *
 
 item_put_args = reqparse.RequestParser()
-item_put_args.add_argument("grade", type=str, help= "Razred")
+item_put_args.add_argument("grade", type=str, help="Razred", required=True)
 
 # /api/v1/bde372d8c36a146728d84419179a703f0d1bb63f530e384e/<int:item_id>
 class ItemsDeleter(Resource):

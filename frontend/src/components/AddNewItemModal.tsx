@@ -63,6 +63,11 @@ const AddNewItemModal: React.FC<Props> = (props) => {
         const values = Object.fromEntries(formData.entries())
 
         values.isFungible = 'isFungible' in values
+
+        if (!values.price) {
+            delete values.price
+        }
+
         props.onSubmit?.(values)
     }
 

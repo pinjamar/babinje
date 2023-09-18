@@ -1,10 +1,12 @@
 import React from 'react'
 import { Label, Segment, SegmentProps } from 'semantic-ui-react'
+import './IndeksCijena.scss'
 
 const IndeksCijena: React.FC<SegmentProps> = (props) => {
     return (
         <Segment
             {...props}
+            className='indeks-cijena'
             basic
             textAlign='center'
             style={{ marginTop: '1.5em' }}>

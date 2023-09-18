@@ -64,10 +64,6 @@ const AddNewItemModal: React.FC<Props> = (props) => {
 
         values.isFungible = 'isFungible' in values
 
-        if (!values.price) {
-            delete values.price
-        }
-
         props.onSubmit?.(values)
     }
 
@@ -126,11 +122,6 @@ const AddNewItemModal: React.FC<Props> = (props) => {
                                 value={formValues.name}
                                 required
                                 onChange={handleChange}
-                            />
-                            <Form.Field
-                                name='price'
-                                control={Input}
-                                label='Cijena'
                             />
                         </Form.Group>
                         <Form.Group widths='equal'>

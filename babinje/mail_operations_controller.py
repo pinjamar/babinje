@@ -22,7 +22,7 @@ class MailOperationsController(Resource):
     @marshal_with(result_marshaller, envelope="data")
     def post(self, item_id: int, key: str):
         from . import api_error
-        from .email_service import send_reservation_confirmed
+        from .email_service import posalji_mail_materi, send_reservation_confirmed
 
         item = db.session.execute(select(BabinjeItem).where(BabinjeItem.id == item_id)).scalar_one_or_none()
         user = db.session.execute(select(User).where(User.reset_string == key)).scalar_one_or_none()
@@ -37,6 +37,7 @@ class MailOperationsController(Resource):
         if item.user == None:
             item.user = user
             send_reservation_confirmed(item, user)
+            posalji_mail_materi(item, user)
         elif item.user != user:
             return api_error(400, -1991, "Cannot mutate to another user on an item")
         else:

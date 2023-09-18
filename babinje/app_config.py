@@ -12,6 +12,7 @@ class AppConfig:
     mail_template_filename: str = None
     mail_accept_template_filename: str = None
     my_hostname: str = None
+    mother_email: str = None
     def __init__(self, filename: str):
         with open(filename) as config:
             jConfig = load(config)    
@@ -26,6 +27,7 @@ class AppConfig:
             self.mail_template_filename = jConfig["MAIL_TEMPLATE_FILENAME"]
             self.mail_accept_template_filename = jConfig["MAIL_ACCEPT_TEMPLATE_FILENAME"]
             self.my_hostname = jConfig["MY_HOSTNAME"]
+            self.mother_email = jConfig["MOTHER_EMAIL"]
 
 # TOKEN 1 - #POZDRAV#
 class MailBuilder:

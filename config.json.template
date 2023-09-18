@@ -9,5 +9,6 @@
     "MAIL_TEMPLATE_FILENAME": "email2.html",
     "MAIL_ACCEPT_TEMPLATE_FILENAME": "email_accept.html",
     "MAIL_USE_SSL": false,
-    "MY_HOSTNAME": "http://localhost:1234"
+    "MY_HOSTNAME": "http://localhost:1234",
+    "MOTHER_EMAIL": "noreply@codebase.hr"
 }

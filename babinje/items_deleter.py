@@ -1,6 +1,6 @@
 from flask_restful import Resource, reqparse, marshal_with
 from sqlalchemy import select
-from .babinje_item import *
+from .babinje_item import babinje_item_marshaller
 
 item_put_args = reqparse.RequestParser()
 item_put_args.add_argument("grade", type=str, help="Razred", required=True)

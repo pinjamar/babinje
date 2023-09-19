@@ -1,8 +1,10 @@
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Column, String, Integer, DateTime, ForeignKey
+from sqlalchemy import MetaData, String, Integer, DateTime, ForeignKey
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 from flask_restful import fields
 from os import urandom
 from datetime import *
+from typing import List
 
 db = SQLAlchemy()
 
@@ -81,22 +83,22 @@ def price_grade_from_price(price: float):
     return "F"
 
 class User(db.Model):
-    id = Column(Integer, primary_key=True)
-    name = Column(String(1024), nullable=True)
-    email = Column(String(1024), nullable=False, unique=True)
-    reset_string = Column(String(48), nullable=True)
-    reset_string_expiry = Column(DateTime, nullable=True)
-    items = db.relationship("BabinjeItem", back_populates="user")
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    name: Mapped[str] = mapped_column(String(1024), nullable=True)
+    email: Mapped[str] = mapped_column(String(1024), nullable=False, unique=True)
+    reset_string: Mapped[str] = mapped_column(String(48), nullable=True)
+    reset_string_expiry: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+    items: Mapped[List["BabinjeItem"]] = relationship(back_populates="user")
 
 class BabinjeItem(db.Model):
-    id = Column(Integer, primary_key=True)
-    name = Column(String(255), nullable=False)
-    desc = Column(String(10000), nullable=True)
-    link = Column(String(255), nullable=True)
-    user_id = Column(Integer, ForeignKey('user.id'), nullable=True)
-    user = db.relationship("User", back_populates="items")
-    img_url = Column(String(255), nullable=True)
-    is_fungible = Column(Integer, nullable=False, default=0)
-    reservation_timeout = Column(DateTime, nullable=True)
-    price_grade = Column(String(2), nullable=True)
-    is_bought = Column(Integer, nullable=False, default=0)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    name: Mapped[str] = mapped_column(String(255), nullable=False)
+    desc: Mapped[str] = mapped_column(String(10000), nullable=True)
+    link: Mapped[str] = mapped_column(String(255), nullable=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"), nullable=True)
+    user: Mapped["User"] = relationship(back_populates="items")
+    img_url: Mapped[str] = mapped_column(String(255), nullable=True)
+    is_fungible: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    reservation_timeout: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+    price_grade: Mapped[str] = mapped_column(String(2), nullable=True)
+    is_bought: Mapped[int] = mapped_column(Integer, nullable=False, default=0)

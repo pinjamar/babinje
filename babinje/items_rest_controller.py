@@ -5,5 +5,5 @@ class ItemsController(Resource):
 
     @marshal_with(babinje_item_marshaller, envelope="data")
     def get(self):
-        items = BabinjeItem.query.all()
+        items = list(reversed(BabinjeItem.query.all()))
         return items

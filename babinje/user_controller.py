@@ -21,15 +21,16 @@ def upsert_user(email: str, name: str = None):
         db.session.commit()
     return existing
 
-def process_user(item: BabinjeItem, email: str, name: str):
+def process_user(item: BabinjeItem, user: User):
     from . import api_error
 
     if item.user != None:
-        if item.user.email != email:
-            api_error(400, -1945, "Drugi korisnik posjeduje ovaj artikl, nemoguće je koristiti s ovim mailom")     
+        if item.user.email != user.email:
+            api_error(400, -1945, "Drugi korisnik posjeduje ovaj artikl, nemoguće je koristiti s ovim mailom")
+
+    if not user.can_execute_operation():
+        api_error(400, -1956, "Prethodna operacija za ovog korisnika nije završena, prvo potvrdite operaciju iz email poruke")
     
-    # upsert a user if not existing
-    user = upsert_user(email=email, name=name)
     reset_string = make_email_action_string()
 
     user.reset_string = reset_string
@@ -62,6 +63,9 @@ class UserController(Resource):
         name = args["name"]
         
         email = check_email(mail_candidate)
+        user = upsert_user(email=email, name=name)
+
+        url_result = process_user(item, user)
 
         now = datetime.utcnow()
         timeout = make_expiry_date(1)
@@ -70,14 +74,13 @@ class UserController(Resource):
             item.reservation_timeout = timeout
             db.session.commit()
         elif now < item.reservation_timeout:
+            
             return api_error(400, -1911, "Artikl je u procesu rezervacije kod drugog korisnika, pričekajte!")
         else:
             item.reservation_timeout = timeout
             db.session.commit()
 
-        url_result = process_user(item, email, name)
         # NASTY URL BUILDING SHITE
-        user = upsert_user(email)
         url = babinje_config.my_hostname + "/" + url_result
 
         if not send_email(item, user, item.user == None, url):

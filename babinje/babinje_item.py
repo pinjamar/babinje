@@ -90,6 +90,10 @@ class User(db.Model):
     reset_string_expiry: Mapped[datetime] = mapped_column(DateTime, nullable=True)
     items: Mapped[List["BabinjeItem"]] = relationship(back_populates="user")
 
+    def can_execute_operation(self):
+        now = datetime.utcnow()
+        return self.reset_string == None or self.reset_string_expiry < now
+
 class BabinjeItem(db.Model):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     name: Mapped[str] = mapped_column(String(255), nullable=False)

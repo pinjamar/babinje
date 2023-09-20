@@ -18,6 +18,7 @@ import IndeksCijena from '../components/IndeksCijena'
 const ItemsList: React.FC<{ isFungible: boolean }> = (props) => {
     const { isFungible } = props
     const [items, setItems] = useState<Array<BabinjeItem>>([])
+    const [filteredItems, setFilteredItems] = useState<Array<BabinjeItem>>([])
     const [isLoading, setLoading] = useState(false)
     const toast = useToast()
 
@@ -39,6 +40,15 @@ const ItemsList: React.FC<{ isFungible: boolean }> = (props) => {
             .finally(() => setLoading(false))
     }
 
+    const onGradeSelect = (grade: string | null) => {
+        if (!grade) {
+            setFilteredItems(items)
+            return
+        }
+
+        setFilteredItems(items.filter((it) => it.priceGrade === grade))
+    }
+
     useEffect(() => {
         setLoading(true)
         fetch('api/v1/items')
@@ -54,7 +64,11 @@ const ItemsList: React.FC<{ isFungible: boolean }> = (props) => {
             })
             .then((json) => {
                 const artikli = json.data ?? []
-                setItems(artikli.filter((it) => it.isFungible == isFungible))
+                const resultItems = artikli.filter(
+                    (it) => it.isFungible == isFungible,
+                )
+                setItems(resultItems)
+                setFilteredItems(resultItems)
             })
             .catch((error) => {
                 console.error(error)
@@ -75,12 +89,15 @@ const ItemsList: React.FC<{ isFungible: boolean }> = (props) => {
                     </p>
                 )}
             </Container>
-            <IndeksCijena hidden={items.length === 0} />
+            <IndeksCijena
+                onSelect={onGradeSelect}
+                hidden={items.length === 0}
+            />
             <Card.Group centered>
                 <Dimmer active={isLoading} inverted>
                     <Loader inverted>Loading</Loader>
                 </Dimmer>
-                {items.map((it, idx) => (
+                {filteredItems.map((it, idx) => (
                     <BabinjeCard
                         key={idx + '_card_main'}
                         data={it}
